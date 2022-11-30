@@ -3,8 +3,11 @@ import javax.swing.*;
 import pieces.*;
 
 import java.awt.*;
+import square.*;
 
 public class ChessBoard extends JPanel{
+
+    private Square[][] chessBoardArray = new Square[8][8];
 
     public ChessBoard(){
         setLayout(new GridLayout(9,9));
@@ -18,22 +21,24 @@ public class ChessBoard extends JPanel{
             for (int j = 1; j < 9; j++){
                 Square temp;
                 //pawns
-                if (i == 2){temp = new Square(new Pawn(i,j,"black"));}
-                else if (i == 7){temp = new Square(new Pawn(i, j, "white"));}
+                if (i == 2){temp = new Square(new Pawn(j-1,i-1,"black"));}
+                else if (i == 7){temp = new Square(new Pawn(j-1, i-1, "white"));}
 
                 //back row
                 /*else if(i == 1){
                     if (j == 1 || j == 8){temp = new Square(new Rook(i,j,"black"));}
                 }*/
-                else {temp = new Square();}
+                else {temp = new Square(j-1, i-1);}
                 if ((i % 2 != 0 &&j % 2 == 0) || (i % 2 == 0 && j % 2 != 0)){
                         temp.setBackground(Color.GRAY);
                     }
                 else{
                     temp.setBackground(Color.LIGHT_GRAY);
                 }
+                chessBoardArray[j-1][i-1] = temp;
                 add(temp);
                 }
             }
         }
+    public Square[][] getChessBoardArray(){return this.chessBoardArray;}
 }

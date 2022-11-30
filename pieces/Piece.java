@@ -1,5 +1,9 @@
 package pieces;
 import java.awt.Image;
+import java.util.*;
+import square.*;
+
+
 public abstract class Piece{
     private int x;
     private int y;
@@ -14,7 +18,23 @@ public abstract class Piece{
         this.color = color;
         this.img = img;
     }
-    public abstract void Move(int x, int y);
+    public abstract Set<String> possibleMoves(Square[][] gameArray);
+    public boolean isvalidSpot(Square[][] gameArray, int checkX, int checkY){
+        if (gameArray[x][y].getPiece() == null){return true;}
+        else {
+            if (!gameArray[x][y].getPiece().getColor().equals(this.color)){return true;}
+        }
+        return false;
+    }
+
+
+
+
+    public abstract boolean Move(Set<String> moveList,Square toSquare, Square fromSquare);
+
+
+    
+
     public void Take(Piece piece){
         this.x = piece.getX();
         this.y = piece.getY();
@@ -25,6 +45,7 @@ public abstract class Piece{
     }
     public int getX(){return this.x;}
     public int getY(){return this.y;}
+    public String getColor(){return this.color;}
     public boolean isCaptured(){return this.captured;}
     public Image getImage(){return this.img;}
 }

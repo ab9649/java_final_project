@@ -1,4 +1,4 @@
-
+package square;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -8,23 +8,31 @@ import javax.swing.JPanel;
 import pieces.Piece;
 
 public class Square extends JPanel {
+    private int locX;
+    private int locY;
 	private Piece currPiece;
 	
 	//public Square(String img) {
 		//this(new ImageIcon(img).getImage());
 	//}
 
-
-    public Square(){
+    public Square(int x, int y){
+        this.locX = x;
+        this.locY = y;
         this.currPiece = null;
     }
     public Square(Piece piece){
+        this.locX = piece.getX();
+        this.locY = piece.getY();
         this.currPiece = piece;
     }
     public void setPiece(Piece piece){
         currPiece = piece;
         repaint();
     }
+    public Piece getPiece(){return this.currPiece;}
+    public int getlocX(){return this.locX;}
+    public int getlocY(){return this.locY;}
 
 
 	//public Square(Image img) {
