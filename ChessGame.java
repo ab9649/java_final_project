@@ -39,6 +39,7 @@ public class ChessGame extends JFrame{
                     if (chosenSquare.getPiece() != null && chosenSquare.getPiece().getColor().equals(currTurn)){
                         fromSquare = chosenSquare;
                         //validate moves
+                        System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece());
                         possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
                         validPress = true;
                         return;

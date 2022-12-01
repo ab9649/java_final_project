@@ -42,7 +42,11 @@ public abstract class Piece{
     }
     public void capture(){
         this.captured = true;
+        this.x = 0;
+        this.y = 0;
     }
+    public void setX(int x){this.x = x;}
+    public void setY(int y){this.y = y;}
     public int getX(){return this.x;}
     public int getY(){return this.y;}
     public String getColor(){return this.color;}
