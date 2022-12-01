@@ -29,6 +29,7 @@ public class Rook extends Piece{
       if (checkX >=0 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
         retList.add(checkX + "," + checkY);
       }
+        checkX = x+1;
       //check right
       while(checkX <=7 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
@@ -37,6 +38,8 @@ public class Rook extends Piece{
       if (checkX <=7 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
         retList.add(checkX + "," + checkY);
       }
+        checkX = x;
+        checkY = y-1;
       //check up
       while(checkY >= 0 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
@@ -45,6 +48,7 @@ public class Rook extends Piece{
       if (checkY >= 0 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
         retList.add(checkX + "," + checkY);
       }
+        checkY = y+1
       //check down
       while(checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
