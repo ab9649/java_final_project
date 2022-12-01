@@ -21,15 +21,25 @@ public class ChessBoard extends JPanel{
             add(new JLabel(""+i, SwingConstants.CENTER));
             for (int j = 1; j < 9; j++){
                 Square temp;
-                //pawns
-                if (i == 2){temp = new Square(new Pawn(j-1,i-1,"black"));}
-                else if (i == 7){temp = new Square(new Pawn(j-1, i-1, "white"));}
+                switch(i){
+                    case 1:
+                        if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"black"));}
+                        else{temp = new Square(j-1, i-1);} //commment this out after making other peices
+                        break;
+                    case 2:
+                        temp = new Square(new Pawn(j-1,i-1,"black"));
+                        break;
+                    case 7:
+                        temp = new Square(new Pawn(j-1, i-1, "white"));
+                        break;
+                    case 8:
+                        if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"white"));}
+                        else{temp = new Square(j-1, i-1);} //comment this our after making other pieces
+                        break;
+                    default:
+                        temp = new Square(j-1, i-1);
+                }
 
-                //back row
-                /*else if(i == 1){
-                    if (j == 1 || j == 8){temp = new Square(new Rook(i,j,"black"));}
-                }*/
-                else {temp = new Square(j-1, i-1);}
                 if ((i % 2 != 0 &&j % 2 == 0) || (i % 2 == 0 && j % 2 != 0)){
                         temp.setBackground(Color.GRAY);
                     }

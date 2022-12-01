@@ -30,7 +30,24 @@ public abstract class Piece{
 
 
 
-    public abstract boolean Move(Set<String> moveList,Square toSquare, Square fromSquare);
+    public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
+        System.out.println(""+toSquare.getlocX()+" "+toSquare.getlocY());
+        
+        if (moveList != null && moveList.contains(toSquare.getlocX()+"," +toSquare.getlocY())){
+            if (toSquare.getPiece() == null){
+                this.x = (toSquare.getlocX());
+                this.y = (toSquare.getlocY());
+                
+            }
+            else{
+                this.Take(toSquare.getPiece());
+            }
+            toSquare.setPiece(this);
+            fromSquare.setPiece(null);
+            return true;
+        }
+        return false;
+    }
 
 
     

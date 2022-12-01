@@ -16,7 +16,7 @@ public class Pawn extends Piece{
         //TODO
     }
 
-    
+     
     @Override
     public boolean Move(Set<String> moveList, Square toSquare, Square fromSquare) {
         System.out.println(""+toSquare.getlocX()+" "+toSquare.getlocY());
