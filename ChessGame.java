@@ -8,13 +8,18 @@ import square.*;
 
 public class ChessGame extends JFrame{
 
-    private String currTurn = "white";
     private Square[][] gameArray;
+    private King currTurn;
+    private King whiteKing;
+    private King blackKing;
 
     public ChessGame(){
         setSize(700, 700);
         JPanel board =  new ChessBoard();
         gameArray = ((ChessBoard)board).getChessBoardArray();
+        whiteKing= gameArray[3][7].getPiece();
+        blackKing = gameArray[3][0].getPiece();
+        currTurn = whiteKing;
 
         board.addMouseListener(new MouseListener(){
 
@@ -36,13 +41,15 @@ public class ChessGame extends JFrame{
                 JComponent comp = (JComponent) e.getSource();
                 if (comp.getComponentAt(e.getPoint()) instanceof Square){
                     Square chosenSquare = (Square) comp.getComponentAt(e.getPoint());
-                    if (chosenSquare.getPiece() != null && chosenSquare.getPiece().getColor().equals(currTurn)){
-                        fromSquare = chosenSquare;
-                        //validate moves
-                        System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece());
-                        possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
-                        validPress = true;
-                        return;
+                    if (currTurn.getChecked() == false || chosenSquare.getPiece() == currTurn){    //check if king needs to move
+                        if (chosenSquare.getPiece() != null && chosenSquare.getPiece().getColor().equals(currTurn.getColor())){
+                            fromSquare = chosenSquare;
+                            //validate moves
+                            System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece());
+                            possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
+                            validPress = true;
+                            return;
+                        }
                     }
                 }
                 validPress = false;
@@ -55,9 +62,23 @@ public class ChessGame extends JFrame{
                     JComponent comp = (JComponent) e.getSource();
                     if (comp.getComponentAt(e.getPoint()) instanceof Square){
                         toSquare = (Square) comp.getComponentAt(e.getPoint());
+                        Piece fromPiece = fromSquare.getPiece();
+                        Piece toPiece = toSquare.getPiece();
                         if (fromSquare.getPiece().Move(possibleMoveLocations, toSquare, fromSquare)){
-                            System.out.println("true");
-                            swapCurTurn();
+                            //move would place own king in check
+                            if (currTurn.isChecked()){
+                                undo(fromPiece, toPiece);
+                            }
+                            else {
+                                if (swapCurTurn().isChecked()){
+                                    //TODO
+                                    swapCurTurn.setChecked() = true;
+                                    if (swapCurTurn().possibleMoves() == {}){
+                                        gameOver();
+                                    }
+                                }
+                                currTurn = swapCurTurn();
+                            }
                         }
                     }
                 }
@@ -66,13 +87,11 @@ public class ChessGame extends JFrame{
                 possibleMoveLocations = null;
             }
 
-            private void swapCurTurn() {
-                if (currTurn.equals("white")){
-                    currTurn = "black";
+            private King swapCurTurn() {
+                if (currTurn == whiteKing){
+                    return blackKing;
                 }
-                else{
-                    currTurn = "white";
-                }
+                return whiteKing;
             }
 
             @Override
@@ -90,8 +109,16 @@ public class ChessGame extends JFrame{
         });
         add(board, BorderLayout.CENTER);
     }
-
-
+    
+    public void undo(Piece fromPiece, Piece toPiece){
+        fromSquare.setPiece(fromPiece);
+        toSquare.setPiece(toPiece);
+        if (toPiece != null){
+            toPiece.setCapture(false);
+            toPiece.setX(toSquare.getlocX());
+            toPiece.setY(toSquare.getlocY());
+        }
+    }
 
     public static void main(String[] args){
         JFrame frame = new ChessGame();
