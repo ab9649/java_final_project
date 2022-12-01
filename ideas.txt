@@ -7,10 +7,14 @@ if retList = {} and king check == true END GAME
 have white and black checkSets which store all checked locations on board
 caluclate possible locations before clicking on piece? add possible locations set to checkset (issue when changing set after moving (what if another piece also checks same spot)
 
--possibility?: after move, run is_king_checked() to check each square around king for possible check piece and if exists king.setchecked(true)
+-possibility?: after move, run is_king_checked() ON BOTH KINGS to check each square around each king for possible check piece and if exists king.setchecked(true)
+        -if your piece becomes checked, reset move
   -benefit: more efficient
    -cons:calculating checkmate harder
-         !!!!!!!!!!!!!if moving a piece exposes check it will not register !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      -could be accomplished by running second function if is_checked returns true to check if each possible move square for king return is_checked(true)
+          -messy
+         
+         
 -brute Force: after calling move in mouse release, run possible locations on every remaining piece of that color and store in set
             - have to also call possible locations on every opposite color piece to see if moving would expose a check (if it does reset to previous square)
   -benefit: will make caluclate check mate work as above
