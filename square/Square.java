@@ -52,5 +52,79 @@ public class Square extends JPanel {
         //img = new ImageIcon(newimg).getImage();
         //repaint();
     //}
+	public boolean isCheckSpot(String color){
+	String currTurnColor
+        int x = locX;
+        int y = locY;
+        //along axes
+        for (int d = 0; d < 4; d++){
+            while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
+                switch(d):
+                case 0:
+                    x--;
+                    break;
+                case 1:
+                    y--;
+                    break;
+                case 2:
+                    x++;
+                    break;
+                case 3:
+                    y++;
+                    break;
+            }
+            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece.getColor().equals(currTurnColor) && (gameArray[x][y].getPiece.instanceof(Rook) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
+                return true;
+            }
+            x = super.getX();
+            y = super.getY();
+        }
+        //along diagonal
+        int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}}
+        for (int[] pair : pawnCheckSquares){
+            if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
+                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Pawn) && !gameArray[pair[0]]pair[1]].getPiece().getColor().equals(currTurnColor){
+                    return true;
+                    }
+                }
+            }
+        for (int d = 0; d < 4; d++){
+            while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
+                switch(d):
+                case 0:
+                    x--;
+                    y--;
+                    break;
+                case 1:
+                    y--;
+                    x++;
+                    break;
+                case 2:
+                    x++;
+                    y++:
+                    break;
+                case 3:
+                    y++;
+                    x--;
+                    break;
+            }
+            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece.getColor().equals(currTurnColor) && (gameArray[x][y].getPiece.instanceof(Bishop) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
+                return true;
+            }
+            x = super.getX();
+            y = super.getY();
+        }
+        //knight
+        int[][] knightCheckSquares = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};
+        for (int[] pair:checkList){
+            if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
+                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Knight) && !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(getColor())){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
 
 }
