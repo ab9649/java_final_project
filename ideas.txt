@@ -1,0 +1,17 @@
+##King move with check functionality
+King possible moves function: retList.removeAll(checkSet) - remove all checks positions
+add check boolean to king
+if retList = {} and king check == true END GAME
+
+##check functionality
+have white and black checkSets which store all checked locations on board
+caluclate possible locations before clicking on piece? add possible locations set to checkset (issue when changing set after moving (what if another piece also checks same spot)
+
+-possibility?: after move, run is_king_checked() to check each square around king for possible check piece and if exists king.setchecked(true)
+  -benefit: more efficient
+   -cons:calculating checkmate harder
+         !!!!!!!!!!!!!if moving a piece exposes check it will not register !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-brute Force: after calling move in mouse release, run possible locations on every remaining piece of that color and store in set
+  -benefit: will make caluclate check mate work as above
+  -might not slow down game since at end of turn, (player needs to think might not notice)
+  cons: feels disgusting
