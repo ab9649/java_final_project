@@ -21,7 +21,7 @@ public class ChessGame extends JFrame{
         blackKing = gameArray[3][0].getPiece();
         currTurn = whiteKing;
 
-        board.addMouseListener(new MouseListener(){
+        board.addMouseListener(MouseListener moveListener = new MouseListener(){
 
             Square fromSquare = null;
             Square toSquare = null;
@@ -74,7 +74,7 @@ public class ChessGame extends JFrame{
                                     //TODO
                                     swapCurTurn.setChecked() = true;
                                     if (swapCurTurn().possibleMoves() == {}){
-                                        gameOver();
+                                        gameOver(board, moveListener);
                                     }
                                 }
                                 currTurn = swapCurTurn();
@@ -118,6 +118,13 @@ public class ChessGame extends JFrame{
             toPiece.setX(toSquare.getlocX());
             toPiece.setY(toSquare.getlocY());
         }
+    }
+    
+    public void gameOver(JPanel board, MouseListener moveListener){
+        JLabel overSign = new JLabel("GAME OVER");
+        add(overSign,BorderLayout.CENTER);
+        board.removeMouseListener(moveListener);
+        
     }
 
     public static void main(String[] args){
