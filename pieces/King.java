@@ -26,7 +26,7 @@ public class King extends Piece{
         int[][] checkList = new int[][]{{x+1,y},{x-1,y},{x,y+1},{x,y-1},{x-1,y+1},{x+1,y+1},{x-1,y-1},{x+1,y-1}};
         for (int[] pair:checkList){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
-                if (gameArray[pair[0]][pair[1]].getPiece() == null || gameArray[pair[0]][pair[1]].getPiece().getColor() != super.getColor()){
+                if (gameArray[pair[0]][pair[1]].getPiece() == null || !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
                     if (!gameArray[pair[0],pair[1]].isCheckSpot(super.getColor())){
                         retList.add(pair[0]+","+pair[1]);
                     }
@@ -56,7 +56,7 @@ public class King extends Piece{
                     y++;
                     break;
             }
-            if (gameArray[x][y].getPiece() != null && gameArray[x][y].getPiece.getColor()!=super.getColor() && (gameArray[x][y].getPiece.instanceof(Rook) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
+            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece.getColor().equals(super.getColor()) && (gameArray[x][y].getPiece.instanceof(Rook) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
                 return true;
             }
             x = super.getX();
@@ -66,7 +66,7 @@ public class King extends Piece{
         int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}}
         for (int[] pair : pawnCheckSquares){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
-                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Pawn) && gameArray[pair[0]]pair[1]].getPiece().getColor() == "white"){
+                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Pawn) && !gameArray[pair[0]]pair[1]].getPiece().getColor().equals(super.getColor())){
                     return true;
                     }
                 }
@@ -91,7 +91,7 @@ public class King extends Piece{
                     x--;
                     break;
             }
-            if (gameArray[x][y].getPiece() != null && gameArray[x][y].getPiece.getColor()!=super.getColor() && (gameArray[x][y].getPiece.instanceof(Bishop) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
+            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece.getColor().equals(super.getColor()) && (gameArray[x][y].getPiece.instanceof(Bishop) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
                 return true;
             }
             x = super.getX();
@@ -101,7 +101,7 @@ public class King extends Piece{
         int[][] knightCheckSquares = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};
         for (int[] pair:checkList){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
-                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Knight) && gameArray[pair[0]][pair[1]].getPiece().getColor() != super.getColor()){
+                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Knight) && !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
                     return true;
                 }
             }
