@@ -10,7 +10,7 @@ import square.Square;
 public class Bishop extends Piece{
 
     public Bishop(int x, int y, String color){
-        super(x,y,color,new ImageIcon("images/rook_"+color+".png").getImage());
+        super(x,y,color,new ImageIcon("images/bishop_"+color+".png").getImage());
     }
 
     @Override
@@ -21,6 +21,7 @@ public class Bishop extends Piece{
         
         int checkX = x-1;
         int checkY = y-1;
+        System.out.println("hello");
       //check NW
         while(checkX >=0 && checkY >= 0 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
@@ -49,15 +50,15 @@ public class Bishop extends Piece{
           checkX --;
           checkY ++;
         }
-        if (checkY >= 0 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
+        if (checkY <= 7 && checkX >= 0 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
         retList.add(checkX + "," + checkY);
         }
       //SE
         checkX = x+1;
         checkY = y+1;
-        while(check X <= 7 && checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
+        while(checkX <= 7 && checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
-          checkX ++:
+          checkX ++;
           checkY ++;
         }
         if (checkX <= 7 && checkY <= 7 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
