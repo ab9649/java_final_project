@@ -19,6 +19,7 @@ public abstract class Piece{
         this.img = img;
     }
     public abstract Set<String> possibleMoves(Square[][] gameArray);
+
     public boolean isvalidSpot(Square[][] gameArray, int checkX, int checkY){
         if (gameArray[x][y].getPiece() == null){return true;}
         else {
@@ -62,6 +63,7 @@ public abstract class Piece{
         this.x = 0;
         this.y = 0;
     }
+    public void setCapture(boolean status){this.captured = status;}
     public void setX(int x){this.x = x;}
     public void setY(int y){this.y = y;}
     public int getX(){return this.x;}

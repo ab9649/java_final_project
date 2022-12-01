@@ -50,7 +50,7 @@ public class Queen extends Piece{
         if (checkY >= 0 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
           retList.add(checkX + "," + checkY);
         }
-        checkY = y+1
+        checkY = y+1;
       //check down
         while(checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
@@ -98,9 +98,9 @@ public class Queen extends Piece{
       //SE
         checkX = x+1;
         checkY = y+1;
-        while(check X <= 7 && checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
+        while(checkX <= 7 && checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
-          checkX ++:
+          checkX ++;
           checkY ++;
         }
         if (checkX <= 7 && checkY <= 7 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){

@@ -10,7 +10,7 @@ import square.Square;
 public class Bishop extends Piece{
 
     public Bishop(int x, int y, String color){
-        super(x,y,color,new ImageIcon("images/rook_"+color+".png").getImage());
+        super(x,y,color,new ImageIcon("images/bishop_"+color+".png").getImage());
     }
 
     @Override
@@ -55,9 +55,9 @@ public class Bishop extends Piece{
       //SE
         checkX = x+1;
         checkY = y+1;
-        while(check X <= 7 && checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
+        while(checkX <= 7 && checkY <= 7 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
-          checkX ++:
+          checkX ++;
           checkY ++;
         }
         if (checkX <= 7 && checkY <= 7 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){

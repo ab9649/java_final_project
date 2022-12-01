@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.util.*;
 
 import square.*;
+import pieces.*;
 
 
 public class ChessGame extends JFrame{
@@ -17,11 +18,11 @@ public class ChessGame extends JFrame{
         setSize(700, 700);
         JPanel board =  new ChessBoard();
         gameArray = ((ChessBoard)board).getChessBoardArray();
-        whiteKing= gameArray[3][7].getPiece();
-        blackKing = gameArray[3][0].getPiece();
-        currTurn = whiteKing;
+        King whiteKing= (King) gameArray[4][7].getPiece();
+        King blackKing = (King) gameArray[4][0].getPiece();
+        King turn = whiteKing;
 
-        board.addMouseListener(MouseListener moveListener = new MouseListener(){
+        MouseListener moveListener = new MouseListener(){
 
             Square fromSquare = null;
             Square toSquare = null;
@@ -38,6 +39,7 @@ public class ChessGame extends JFrame{
             @Override
             public void mousePressed(MouseEvent e) {
                 // TODO Auto-generated method stub
+                King currTurn = turn;
                 JComponent comp = (JComponent) e.getSource();
                 if (comp.getComponentAt(e.getPoint()) instanceof Square){
                     Square chosenSquare = (Square) comp.getComponentAt(e.getPoint());
@@ -66,15 +68,15 @@ public class ChessGame extends JFrame{
                         Piece toPiece = toSquare.getPiece();
                         if (fromSquare.getPiece().Move(possibleMoveLocations, toSquare, fromSquare)){
                             //move would place own king in check
-                            if (currTurn.isChecked()){
-                                undo(fromPiece, toPiece);
+                            if (currTurn.isChecked(gameArray)){
+                                undo(fromPiece, toPiece, fromSquare, toSquare);
                             }
                             else {
-                                if (swapCurTurn().isChecked()){
+                                if (swapCurTurn().isChecked(gameArray)){
                                     //TODO
-                                    swapCurTurn.setChecked() = true;
-                                    if (swapCurTurn().possibleMoves() == {}){
-                                        gameOver(board, moveListener);
+                                    swapCurTurn().setChecked(true);
+                                    if (swapCurTurn().possibleMoves(gameArray).isEmpty()){
+                                        gameOver(board, this);
                                     }
                                 }
                                 currTurn = swapCurTurn();
@@ -106,11 +108,12 @@ public class ChessGame extends JFrame{
                 
             }
             
-        });
+        };
+        board.addMouseListener(moveListener);
         add(board, BorderLayout.CENTER);
     }
     
-    public void undo(Piece fromPiece, Piece toPiece){
+    public void undo(Piece fromPiece, Piece toPiece, Square fromSquare, Square toSquare){
         fromSquare.setPiece(fromPiece);
         toSquare.setPiece(toPiece);
         if (toPiece != null){

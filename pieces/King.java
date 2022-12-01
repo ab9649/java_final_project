@@ -14,8 +14,8 @@ public class King extends Piece{
     public King(int x, int y, String color){
         super(x,y,color,new ImageIcon("images/king_"+color+".png").getImage());
     }
-    public void setChecked(boolean status){this.checked = status}
-    public void getChecked(){return this.checked}
+    public void setChecked(boolean status){this.checked = status;}
+    public boolean getChecked(){return this.checked;}
    
 
     @Override
@@ -27,7 +27,7 @@ public class King extends Piece{
         for (int[] pair:checkList){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
                 if (gameArray[pair[0]][pair[1]].getPiece() == null || !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
-                    if (!gameArray[pair[0],pair[1]].isCheckSpot(super.getColor())){
+                    if (!gameArray[pair[0]][pair[1]].isCheckSpot(super.getColor(), gameArray)){
                         retList.add(pair[0]+","+pair[1]);
                     }
                 }
@@ -36,13 +36,13 @@ public class King extends Piece{
         return retList;
     }
     
-    public boolean isChecked(){
+    public boolean isChecked(Square[][] gameArray){
         int x = super.getX();
         int y = super.getY();
         //along axes
         for (int d = 0; d < 4; d++){
             while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
-                switch(d):
+                switch(d){
                 case 0:
                     x--;
                     break;
@@ -55,25 +55,26 @@ public class King extends Piece{
                 case 3:
                     y++;
                     break;
+                }
             }
-            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece.getColor().equals(super.getColor()) && (gameArray[x][y].getPiece.instanceof(Rook) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
+            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(super.getColor()) && (gameArray[x][y].getPiece() instanceof Rook || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
                 return true;
             }
             x = super.getX();
             y = super.getY();
         }
         //along diagonal
-        int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}}
+        int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}};
         for (int[] pair : pawnCheckSquares){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
-                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Pawn) && !gameArray[pair[0]]pair[1]].getPiece().getColor().equals(super.getColor())){
+                if (gameArray[pair[0]][pair[1]].getPiece() instanceof Pawn && !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
                     return true;
                     }
                 }
             }
         for (int d = 0; d < 4; d++){
             while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
-                switch(d):
+                switch(d){
                 case 0:
                     x--;
                     y--;
@@ -84,14 +85,15 @@ public class King extends Piece{
                     break;
                 case 2:
                     x++;
-                    y++:
+                    y++;
                     break;
                 case 3:
                     y++;
                     x--;
                     break;
+                }
             }
-            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece.getColor().equals(super.getColor()) && (gameArray[x][y].getPiece.instanceof(Bishop) || gameArray[x][y].getPiece().instanceof(Queen) || gameArray[x][y].getPiece().instanceof(King))){
+            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(super.getColor()) && (gameArray[x][y].getPiece() instanceof Bishop || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
                 return true;
             }
             x = super.getX();
@@ -99,9 +101,9 @@ public class King extends Piece{
         }
         //knight
         int[][] knightCheckSquares = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};
-        for (int[] pair:checkList){
+        for (int[] pair: knightCheckSquares){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
-                if (gameArray[pair[0]][pair[1]].getPiece().instanceof(Knight) && !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
+                if (gameArray[pair[0]][pair[1]].getPiece() instanceof Knight && !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
                     return true;
                 }
             }

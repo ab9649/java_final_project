@@ -23,7 +23,7 @@ public class ChessBoard extends JPanel{
                 Square temp;
                 switch(i){
                     case 1:
-                        if (j == 1 || j == 8){temp = new Square(new Rook(j-1,i-1,"black));}
+                        if (j == 1 || j == 8){temp = new Square(new Rook(j-1,i-1,"black"));}
                         else if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"black"));}
                         else if (j == 3 || j == 6){temp = new Square(new Bishop(j-1,i-1,"black"));}
                         else if (j == 4){temp = new Square(new Queen(j-1,i-1,"black"));}
@@ -36,7 +36,7 @@ public class ChessBoard extends JPanel{
                         temp = new Square(new Pawn(j-1, i-1, "white"));
                         break;
                     case 8:
-                        if (j == 1 || j == 8){temp = new Square(new Rook(j-1,i-1,"white));}
+                        if (j == 1 || j == 8){temp = new Square(new Rook(j-1,i-1,"white"));}
                         else if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"white"));}
                         else if (j == 3 || j == 6){temp = new Square(new Bishop(j-1,i-1,"white"));}
                         else if (j == 4){temp = new Square(new Queen(j-1,i-1,"white"));}
