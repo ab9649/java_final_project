@@ -19,8 +19,8 @@ public class Rook extends Piece{
         int y = super.getY();
         Set<String> retList = new HashSet<String>();
         
-        checkX = x-1;
-        checkY = y;
+        int checkX = x-1;
+        int checkY = y;
       //check left
         while(checkX >=0 && gameArray[checkX][checkY].getPiece() == null){
           retList.add(checkX + "," + checkY);
