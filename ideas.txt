@@ -12,6 +12,8 @@ caluclate possible locations before clicking on piece? add possible locations se
    -cons:calculating checkmate harder
          !!!!!!!!!!!!!if moving a piece exposes check it will not register !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -brute Force: after calling move in mouse release, run possible locations on every remaining piece of that color and store in set
+            - have to also call possible locations on every opposite color piece to see if moving would expose a check (if it does reset to previous square)
   -benefit: will make caluclate check mate work as above
+  -will work
   -might not slow down game since at end of turn, (player needs to think might not notice)
   cons: feels disgusting
