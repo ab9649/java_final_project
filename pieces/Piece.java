@@ -33,12 +33,7 @@ public abstract class Piece{
 
     public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
         if (moveList != null && moveList.contains(toSquare.getlocX()+"," +toSquare.getlocY())){
-            if (toSquare.getPiece() == null){
-                this.x = (toSquare.getlocX());
-                this.y = (toSquare.getlocY());
-                
-            }
-            else{
+            if (toSquare.getPiece() != null){
                 this.Take(toSquare.getPiece());
             }
             toSquare.setPiece(this);
