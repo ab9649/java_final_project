@@ -19,20 +19,7 @@ public class Pawn extends Piece{
      
     @Override
     public boolean Move(Set<String> moveList, Square toSquare, Square fromSquare) {
-        System.out.println(""+toSquare.getlocX()+" "+toSquare.getlocY());
-        
-        if (moveList != null && moveList.contains(toSquare.getlocX()+"," +toSquare.getlocY())){
-            if (toSquare.getPiece() == null){
-                super.setX(toSquare.getlocX());
-                super.setY(toSquare.getlocY());
-                
-            }
-            else{
-                this.Take(toSquare.getPiece());
-            }
-            toSquare.setPiece(this);
-            fromSquare.setPiece(null);
-            //TODO write prompte function
+       if (super.Move(moveList, toSquare, fromSquare)){
             if (super.getY() == 0){
                 this.Promote();
             }

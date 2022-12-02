@@ -23,8 +23,11 @@ public class ChessBoard extends JPanel{
                 Square temp;
                 switch(i){
                     case 1:
-                        if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"black"));}
-                        else{temp = new Square(j-1, i-1);} //commment this out after making other peices
+                        if (j == 1 || j == 8){temp = new Square(new Rook(j-1,i-1,"black"));}
+                        else if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"black"));}
+                        else if (j == 3 || j == 6){temp = new Square(new Bishop(j-1,i-1,"black"));}
+                        else if (j == 4){temp = new Square(new Queen(j-1,i-1,"black"));}
+                        else {temp = new Square(new King(j-1,i-1,"black"));}
                         break;
                     case 2:
                         temp = new Square(new Pawn(j-1,i-1,"black"));
@@ -33,8 +36,11 @@ public class ChessBoard extends JPanel{
                         temp = new Square(new Pawn(j-1, i-1, "white"));
                         break;
                     case 8:
-                        if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"white"));}
-                        else{temp = new Square(j-1, i-1);} //comment this our after making other pieces
+                        if (j == 1 || j == 8){temp = new Square(new Rook(j-1,i-1,"white"));}
+                        else if (j == 2 || j == 7){temp = new Square(new Knight(j-1,i-1,"white"));}
+                        else if (j == 3 || j == 6){temp = new Square(new Bishop(j-1,i-1,"white"));}
+                        else if (j == 4){temp = new Square(new Queen(j-1,i-1,"white"));}
+                        else {temp = new Square(new King(j-1,i-1,"white"));}
                         break;
                     default:
                         temp = new Square(j-1, i-1);
