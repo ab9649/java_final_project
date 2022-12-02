@@ -31,6 +31,9 @@ public class Square extends JPanel {
         currPiece = piece;
         repaint();
     }
+    public void setPieceNoRepaint(Piece piece){
+        currPiece = piece;
+    }
     public Piece getPiece(){return this.currPiece;}
     public int getlocX(){return this.locX;}
     public int getlocY(){return this.locY;}
