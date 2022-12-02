@@ -59,7 +59,9 @@ public class Square extends JPanel {
         int y = locY;
         //along axes
         for (int d = 0; d < 4; d++){
-            while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
+            x = locX;
+            y = locY;
+            while (x >= 0 && y >= 0 && x <= 7 && y <= 7 && gameArray[x][y].getPiece() == null){
                 switch(d){
                 case 0:
                     x--;
@@ -75,11 +77,11 @@ public class Square extends JPanel {
                     break;
                 }
             }
-            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(currTurnColor) && (gameArray[x][y].getPiece() instanceof Rook || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
-                return true;
+            if (x >= 0 && x <= 7 && y >= 0 && y <= 7){
+                if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(currTurnColor) && (gameArray[x][y].getPiece() instanceof Rook || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
+                    return true;
+                }
             }
-            x = super.getX();
-            y = super.getY();
         }
         //along diagonal
         int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}};
@@ -91,6 +93,8 @@ public class Square extends JPanel {
                 }
             }
         for (int d = 0; d < 4; d++){
+            x = locX;
+            y = locY;
             while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
                 switch(d){
                 case 0:
@@ -111,11 +115,12 @@ public class Square extends JPanel {
                     break;
                 }
             }
-            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(currTurnColor) && (gameArray[x][y].getPiece() instanceof Bishop || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
-                return true;
+            if (x>= 0 && x <= 7 && y <= 7 && y >= 0){
+                if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(currTurnColor) && (gameArray[x][y].getPiece() instanceof Bishop || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
+                    return true;
+                }
             }
-            x = super.getX();
-            y = super.getY();
+
         }
         //knight
         int[][] knightCheckSquares = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};

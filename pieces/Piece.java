@@ -32,8 +32,6 @@ public abstract class Piece{
 
 
     public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
-        System.out.println(""+toSquare.getlocX()+" "+toSquare.getlocY());
-        
         if (moveList != null && moveList.contains(toSquare.getlocX()+"," +toSquare.getlocY())){
             if (toSquare.getPiece() == null){
                 this.x = (toSquare.getlocX());

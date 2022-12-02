@@ -10,7 +10,7 @@ import pieces.*;
 public class ChessGame extends JFrame{
 
     private Square[][] gameArray;
-    private King currTurn;
+    private King startTurn;
     private King whiteKing;
     private King blackKing;
 
@@ -18,9 +18,10 @@ public class ChessGame extends JFrame{
         setSize(700, 700);
         JPanel board =  new ChessBoard();
         gameArray = ((ChessBoard)board).getChessBoardArray();
-        King whiteKing= (King) gameArray[4][7].getPiece();
-        King blackKing = (King) gameArray[4][0].getPiece();
-        King turn = whiteKing;
+        whiteKing= (King) gameArray[4][7].getPiece();
+        blackKing = (King) gameArray[4][0].getPiece();
+        startTurn= whiteKing;
+        
 
         MouseListener moveListener = new MouseListener(){
 
@@ -28,7 +29,7 @@ public class ChessGame extends JFrame{
             Square toSquare = null;
             Set<String> possibleMoveLocations = null;
             boolean validPress = true;
-            
+            King currTurn = startTurn;
 
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -39,7 +40,6 @@ public class ChessGame extends JFrame{
             @Override
             public void mousePressed(MouseEvent e) {
                 // TODO Auto-generated method stub
-                King currTurn = turn;
                 JComponent comp = (JComponent) e.getSource();
                 if (comp.getComponentAt(e.getPoint()) instanceof Square){
                     Square chosenSquare = (Square) comp.getComponentAt(e.getPoint());
@@ -124,6 +124,7 @@ public class ChessGame extends JFrame{
     }
     
     public void gameOver(JPanel board, MouseListener moveListener){
+        System.out.println("CHECKMATE");
         JLabel overSign = new JLabel("GAME OVER");
         add(overSign,BorderLayout.CENTER);
         board.removeMouseListener(moveListener);

@@ -49,7 +49,7 @@ public class Bishop extends Piece{
           checkX --;
           checkY ++;
         }
-        if (checkY >= 0 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
+        if (checkY <= 7 && checkX >= 0 && !gameArray[checkX][checkY].getPiece().getColor().equals(super.getColor())){
         retList.add(checkX + "," + checkY);
         }
       //SE

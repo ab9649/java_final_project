@@ -20,7 +20,7 @@ public class Knight extends Piece{
         Set<String> retList = new HashSet<String>();
         int[][] checkList = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};
         for (int[] pair:checkList){
-            if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
+            if (pair[0] >= 0 && pair[0] <=7 && pair[1] >= 0 && pair[1] <=7){
                 if (gameArray[pair[0]][pair[1]].getPiece() == null || gameArray[pair[0]][pair[1]].getPiece().getColor() != super.getColor())
                 retList.add(pair[0]+","+pair[1]);
             }

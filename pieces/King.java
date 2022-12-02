@@ -16,8 +16,17 @@ public class King extends Piece{
     }
     public void setChecked(boolean status){this.checked = status;}
     public boolean getChecked(){return this.checked;}
-   
 
+    @Override
+    public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
+        if(super.Move(moveList, toSquare, fromSquare)){
+            checked = false;
+            return true;
+        }
+        return false;
+        
+
+    }
     @Override
     public Set<String> possibleMoves(Square[][] gameArray) {
         int x = super.getX();
@@ -25,7 +34,7 @@ public class King extends Piece{
         Set<String> retList = new HashSet<String>();
         int[][] checkList = new int[][]{{x+1,y},{x-1,y},{x,y+1},{x,y-1},{x-1,y+1},{x+1,y+1},{x-1,y-1},{x+1,y-1}};
         for (int[] pair:checkList){
-            if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
+            if (pair[0] >= 0 && pair[0] <=7 && pair[1] >= 0 && pair[1] <=7){
                 if (gameArray[pair[0]][pair[1]].getPiece() == null || !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
                     if (!gameArray[pair[0]][pair[1]].isCheckSpot(super.getColor(), gameArray)){
                         retList.add(pair[0]+","+pair[1]);
@@ -41,7 +50,9 @@ public class King extends Piece{
         int y = super.getY();
         //along axes
         for (int d = 0; d < 4; d++){
-            while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
+            x = super.getX();
+            y = super.getY();
+            while (x >= 0 && y >= 0 && x <= 7 && y <= 7 && (gameArray[x][y].getPiece() == null || gameArray[x][y].getPiece() == this)){
                 switch(d){
                 case 0:
                     x--;
@@ -57,11 +68,11 @@ public class King extends Piece{
                     break;
                 }
             }
-            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(super.getColor()) && (gameArray[x][y].getPiece() instanceof Rook || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
-                return true;
+            if(x >= 0 && x <= 7 && y >= 0 && y <= 7){
+                if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(super.getColor()) && (gameArray[x][y].getPiece() instanceof Rook || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
+                    return true;
+                }
             }
-            x = super.getX();
-            y = super.getY();
         }
         //along diagonal
         int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}};
@@ -73,7 +84,9 @@ public class King extends Piece{
                 }
             }
         for (int d = 0; d < 4; d++){
-            while (x > 0 && y >= 0 && x <= 7 && y < 7 && gameArray[x][y].getPiece() == null){
+            x = super.getX();
+            y = super.getY();
+            while (x >= 0 && y >= 0 && x <= 7 && y <= 7 && (gameArray[x][y].getPiece() == null || gameArray[x][y].getPiece() == this)){
                 switch(d){
                 case 0:
                     x--;
@@ -93,11 +106,11 @@ public class King extends Piece{
                     break;
                 }
             }
-            if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(super.getColor()) && (gameArray[x][y].getPiece() instanceof Bishop || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
-                return true;
+            if (x >= 0 && x <= 7 && y >= 0 && y <= 7){
+                if (gameArray[x][y].getPiece() != null && !gameArray[x][y].getPiece().getColor().equals(super.getColor()) && (gameArray[x][y].getPiece() instanceof Bishop || gameArray[x][y].getPiece() instanceof Queen || gameArray[x][y].getPiece() instanceof King)){
+                    return true;
+                }
             }
-            x = super.getX();
-            y = super.getY();
         }
         //knight
         int[][] knightCheckSquares = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};

@@ -21,3 +21,12 @@ caluclate possible locations before clicking on piece? add possible locations se
   -will work
   -might not slow down game since at end of turn, (player needs to think might not notice)
   cons: feels disgusting
+  ###############SOLVED######################
+
+  issues:
+  king cannot take pieces that are checking him
+  cannot use other pieces to take checking pieces
+
+  idea:
+  run king.is_checked() after any move when king is checked an undo if still checked
+
