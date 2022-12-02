@@ -1,6 +1,9 @@
 pawn promotion
+    -promote to any new type of piece (does not have to be captures) actually makes this easier
+         -this.delete()
+         -currSquare.setpiece(new Piece())
 castling
-
+    -can castle to either side as long as both rook and king have not been moved and there are no pieces between and none of the king squares are in check.
 Layered panel for "white/black wins!"
     -replay option 
 add options bar
