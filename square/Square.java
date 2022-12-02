@@ -29,8 +29,10 @@ public class Square extends JPanel {
     }
     public void setPiece(Piece piece){
         currPiece = piece;
-	piece.setX() = locX;
-	piece.setY() = locY;
+	if (piece != null){
+	    piece.setX() = locX;
+	    piece.setY() = locY;
+	}
         repaint();
     }
     public void setPieceNoRepaint(Piece piece){
