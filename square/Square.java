@@ -29,10 +29,10 @@ public class Square extends JPanel {
     }
     public void setPiece(Piece piece){
         currPiece = piece;
-	if (piece != null){
-	    piece.setX() = locX;
-	    piece.setY() = locY;
-	}
+	    if (piece != null){
+	        piece.setX(locX);
+	        piece.setY(locY);
+	    }
         repaint();
     }
     public void setPieceNoRepaint(Piece piece){
@@ -130,6 +130,8 @@ public class Square extends JPanel {
 
         }
         //knight
+        x = locX;
+        y = locY;
         int[][] knightCheckSquares = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};
         for (int[] pair:knightCheckSquares){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){

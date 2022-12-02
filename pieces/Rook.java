@@ -9,7 +9,7 @@ import square.Square;
 
 public class Rook extends Piece{
     
-    private canCastle = true;
+    private boolean canCastle = true;
 
     public Rook(int x, int y, String color){
         super(x,y,color,new ImageIcon("images/rook_"+color+".png").getImage());
@@ -18,8 +18,8 @@ public class Rook extends Piece{
     public boolean getCanCastle(){return this.canCastle;}
 
     @Override
-    public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
-        if(super.Move(moveList, toSquare, fromSquare)){
+    public boolean Move(Square[][] gameArray, Set<String> moveList,Square toSquare, Square fromSquare){
+        if(super.Move(gameArray, moveList, toSquare, fromSquare)){
             canCastle = false;
             return true;
         }

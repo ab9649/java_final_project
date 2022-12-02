@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
+import javax.xml.catalog.Catalog;
 
 import square.Square;
 
@@ -15,37 +16,56 @@ public class King extends Piece{
     public King(int x, int y, String color){
         super(x,y,color,new ImageIcon("images/king_"+color+".png").getImage());
     }
+
     public void setChecked(boolean status){this.checked = status;}
     public boolean getChecked(){return this.checked;}
+    public boolean getCanCastle(){return this.canCastle;}
+    public void setCanCastle(boolean status){this.canCastle = status;}
+
 
     @Override
-    public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
+    public boolean Move(Square[][] gameArray, Set<String> moveList,Square toSquare, Square fromSquare){
         Piece toPiece = toSquare.getPiece();
-        //fix this (bad or)
-        if (toPiece instanceof Rook && toPiece.getColor() == super.getColor() && (moveList.contains("KC") || moveList.contains("QC")) ){
-            performCastle(toPiece);
+        if (toPiece instanceof Rook && toPiece.getColor() == super.getColor()){
+            if ((toPiece.getX() == 7 && moveList.contains("KC"))||(toPiece.getX() == 0 && moveList.contains("QC"))){
+                performCastle(gameArray, (Rook)toPiece);
+                return true;
+            }
         }
         else {
-            if(super.Move(moveList, toSquare, fromSquare)){
+            if(super.Move(gameArray,moveList, toSquare, fromSquare)){
                 checked = false;
                 canCastle = false;
                 return true;
             }
-            return false;
+        }
+        return false;
+    }
+
+
+    private void performCastle(Square[][] gameArray, Rook rook){
+        gameArray[super.getX()][super.getY()].setPiece(null);
+        gameArray[rook.getX()][rook.getY()].setPiece(null);
+        if (rook.getX() < super.getX()){
+            gameArray[super.getX()-1][super.getY()].setPiece(rook);
+            gameArray[super.getX()-2][super.getY()].setPiece(this);
+        }
+        else{
+            gameArray[super.getX()+1][super.getY()].setPiece(rook);
+            gameArray[super.getX()+2][super.getY()].setPiece(this);
+            
         }
     }
-    private performCastle(Rook rook){
-        
-    }
+
     
     private boolean attemptCastle(Square[][] gameArray, Rook rook){
         if (rook.getX() == 0){
             for (int i = 1; i < 4; i++){
-                if (gameArray[i][y].getPiece() != null || (i != 1 && gameArray[i][y].isCheckSpot())){
+                if (gameArray[i][super.getY()].getPiece() != null || (i != 1 && gameArray[i][super.getY()].isCheckSpot(super.getColor(), gameArray))){
                     return false;}}}
         else{
             for (int i = 5; i < 7; i++){
-                if (gameArray[i][y].getPiece() != null || gameArray[i][y].isCheckSpot()){
+                if (gameArray[i][super.getY()].getPiece() != null || gameArray[i][super.getY()].isCheckSpot(super.getColor(), gameArray)){
                     return false;}}}
         return true;
     }
@@ -58,15 +78,21 @@ public class King extends Piece{
         //castling
         if (this.canCastle && !this.checked){
             //queenside castle
-            if (gameArray[0][y].getPiece() instanceof Rook && gameArray[0][y].getPiece().getCanCastle()){
-                if (attempCastle(gameArray[0][y].getPiece())){
-                    retList.add("QC");
+            if (gameArray[0][y].getPiece() instanceof Rook){
+                Rook rook = (Rook)gameArray[0][y].getPiece();
+                if (rook.getCanCastle()){
+                    if (attemptCastle(gameArray, (Rook)gameArray[0][y].getPiece())){
+                        retList.add("QC");
+                    }
                 }
             }
-            //kinside castle
-            if (gameArray[7][y].getPiece() instanceof Rook && gameArray[7][y].getPiece().getCanCastle()){
-                if (attemptCastle(gameArray[7][y].getPiece())){
-                    retList.add("KC");
+            //kingside castle
+            if (gameArray[7][y].getPiece() instanceof Rook){
+                Rook rook = (Rook) (gameArray[7][y].getPiece());
+                if (rook.getCanCastle()){
+                    if (attemptCastle(gameArray, (Rook)gameArray[7][y].getPiece())){
+                        retList.add("KC");
+                    }
                 }
             }
         }
@@ -151,6 +177,8 @@ public class King extends Piece{
                 }
             }
         }
+        x = super.getX();
+        y = super.getY();
         //knight
         int[][] knightCheckSquares = new int[][]{{x+2,y+1},{x+2,y-1},{x-2,y-1},{x-2,y+1},{x-1,y+2},{x+1,y+2},{x-1,y-2},{x+1,y-2}};
         for (int[] pair: knightCheckSquares){
