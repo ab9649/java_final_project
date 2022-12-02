@@ -1,1 +1,8 @@
 
+Layered panel for "white/black wins!"
+    -replay option 
+add options bar
+    -resign
+-network options
+    -when player connects give option to choose color
+    -color stored in client and they can only choose that color
