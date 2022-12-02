@@ -10,6 +10,7 @@ import square.Square;
 public class King extends Piece{
     
     private boolean checked = false;
+    private boolean canCastle = true;
 
     public King(int x, int y, String color){
         super(x,y,color,new ImageIcon("images/king_"+color+".png").getImage());
@@ -19,19 +20,57 @@ public class King extends Piece{
 
     @Override
     public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
-        if(super.Move(moveList, toSquare, fromSquare)){
-            checked = false;
-            return true;
+        Piece toPiece = toSquare.getPiece();
+        //fix this (bad or)
+        if (toPiece instanceof Rook && toPiece.getColor() == super.getColor() && (moveList.contains("KC") || moveList.contains("QC")) ){
+            performCastle(toPiece);
         }
-        return false;
-        
-
+        else {
+            if(super.Move(moveList, toSquare, fromSquare)){
+                checked = false;
+                canCastle = false;
+                return true;
+            }
+            return false;
+        }
     }
+    private performCastle(Rook rook){
+        
+    }
+    
+    private boolean attemptCastle(Square[][] gameArray, Rook rook){
+        if (rook.getX() == 0){
+            for (int i = 1; i < 4; i++){
+                if (gameArray[i][y].getPiece() != null || (i != 1 && gameArray[i][y].isCheckSpot())){
+                    return false;}}}
+        else{
+            for (int i = 5; i < 7; i++){
+                if (gameArray[i][y].getPiece() != null || gameArray[i][y].isCheckSpot()){
+                    return false;}}}
+        return true;
+    }
+    
     @Override
     public Set<String> possibleMoves(Square[][] gameArray) {
         int x = super.getX();
         int y = super.getY();
         Set<String> retList = new HashSet<String>();
+        //castling
+        if (this.canCastle && !this.checked){
+            //queenside castle
+            if (gameArray[0][y].getPiece() instanceof Rook && gameArray[0][y].getPiece().getCanCastle()){
+                if (attempCastle(gameArray[0][y].getPiece())){
+                    retList.add("QC");
+                }
+            }
+            //kinside castle
+            if (gameArray[7][y].getPiece() instanceof Rook && gameArray[7][y].getPiece().getCanCastle()){
+                if (attemptCastle(gameArray[7][y].getPiece())){
+                    retList.add("KC");
+                }
+            }
+        }
+        
         int[][] checkList = new int[][]{{x+1,y},{x-1,y},{x,y+1},{x,y-1},{x-1,y+1},{x+1,y+1},{x-1,y-1},{x+1,y-1}};
         for (int[] pair:checkList){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] >= 0 && pair[1] <=7){
