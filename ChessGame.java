@@ -13,6 +13,8 @@ public class ChessGame extends JFrame{
     private King startTurn;
     private King whiteKing;
     private King blackKing;
+    private final ArrayList<Piece> blackPieces = new ArrayList<Piece>();
+    private final ArrayList<Piece> whitePieces = new ArrayList<Piece>();
 
     public ChessGame(){
         setSize(700, 700);
@@ -21,7 +23,16 @@ public class ChessGame extends JFrame{
         whiteKing= (King) gameArray[4][7].getPiece();
         blackKing = (King) gameArray[4][0].getPiece();
         startTurn= whiteKing;
-        
+
+        for (int j = 0, i = 0, k = 0; i < 16; i ++, j++){
+            if (i == 8){j = 0; k =1;}
+            blackPieces.add(gameArray[j][k].getPiece());
+        }
+        for (int j = 0, i = 0, k = 7; i < 16; i ++, j++){
+            if (i == 8){j = 0; k =6;}
+            whitePieces.add(gameArray[j][k].getPiece());
+        }
+        System.out.println(blackPieces);
 
         MouseListener moveListener = new MouseListener(){
 
@@ -43,16 +54,14 @@ public class ChessGame extends JFrame{
                 JComponent comp = (JComponent) e.getSource();
                 if (comp.getComponentAt(e.getPoint()) instanceof Square){
                     Square chosenSquare = (Square) comp.getComponentAt(e.getPoint());
-                    if (currTurn.getChecked() == false || chosenSquare.getPiece() == currTurn){    //check if king needs to move
-                        if (chosenSquare.getPiece() != null && chosenSquare.getPiece().getColor().equals(currTurn.getColor())){
-                            fromSquare = chosenSquare;
-                            //validate moves
-                            System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece());
-                            possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
-                            validPress = true;
-                            return;
-                        }
-                    }
+                    if (chosenSquare.getPiece() != null && chosenSquare.getPiece().getColor().equals(currTurn.getColor())){
+                        fromSquare = chosenSquare;
+                        //validate moves
+                        System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece());
+                        possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
+                        validPress = true;
+                        return;
+                       }
                 }
                 validPress = false;
             }
@@ -72,12 +81,16 @@ public class ChessGame extends JFrame{
                                 undo(fromPiece, toPiece, fromSquare, toSquare);
                             }
                             else {
+                                //introduce new check
                                 if (swapCurTurn().isChecked(gameArray)){
-                                    //TODO
-                                    swapCurTurn().setChecked(true);
-                                    if (swapCurTurn().possibleMoves(gameArray).isEmpty()){
+                                    if (isCheckmate(swapCurTurn())){
                                         gameOver(board, this);
                                     }
+                                    //TODO
+                                    //swapCurTurn().setChecked(true);
+                                    //if (swapCurTurn().possibleMoves(gameArray).isEmpty()){
+                                        //gameOver(board, this);
+                                    //}
                                 }
                                 currTurn = swapCurTurn();
                             }
@@ -111,6 +124,35 @@ public class ChessGame extends JFrame{
         };
         board.addMouseListener(moveListener);
         add(board, BorderLayout.CENTER);
+    }
+    public boolean isCheckmate(King currTurn){
+        ArrayList<Piece> pieceList;
+        if (currTurn.getColor() == "white"){
+            pieceList = whitePieces;
+        }
+        else{
+            pieceList = blackPieces;
+        }
+        for (Piece piece:pieceList){
+            Set<String> moveList = piece.possibleMoves(gameArray);
+            for (String move : moveList){
+                int x = Character.getNumericValue(move.charAt(0));
+                int y = Character.getNumericValue(move.charAt(2));
+                Piece toPiece = gameArray[x][y].getPiece();
+                Square fromSquare = gameArray[piece.getX()][piece.getY()];
+                Square toSquare = gameArray[x][y];
+                if (piece.Move(moveList, toSquare, fromSquare)){
+                    if (!currTurn.isChecked(gameArray)){
+                        undo(piece, toPiece, fromSquare, toSquare);
+                        return false;
+                    }
+                    else{
+                    undo(piece, toPiece, fromSquare, toSquare);
+                    }
+                }
+            }
+        }
+        return true;
     }
     
     public void undo(Piece fromPiece, Piece toPiece, Square fromSquare, Square toSquare){

@@ -36,9 +36,9 @@ public class King extends Piece{
         for (int[] pair:checkList){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] >= 0 && pair[1] <=7){
                 if (gameArray[pair[0]][pair[1]].getPiece() == null || !gameArray[pair[0]][pair[1]].getPiece().getColor().equals(super.getColor())){
-                    if (!gameArray[pair[0]][pair[1]].isCheckSpot(super.getColor(), gameArray)){
+                    //if (!gameArray[pair[0]][pair[1]].isCheckSpot(super.getColor(), gameArray)){
                         retList.add(pair[0]+","+pair[1]);
-                    }
+                    //}
                 }
             }
         }

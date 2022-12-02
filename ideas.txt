@@ -24,9 +24,11 @@ caluclate possible locations before clicking on piece? add possible locations se
   ###############SOLVED######################
 
   issues:
-  king cannot take pieces that are checking him
-  cannot use other pieces to take checking pieces
+  king cannot take pieces that are checking him ##solved
+  cannot use other pieces to take checking pieces ##solves
 
-  idea:
-  run king.is_checked() after any move when king is checked an undo if still checked
 
+  need to find way to calculate checkmate when using other pieces could solve check - think i have to check every move of every piece of that color.
+ 
+
+ISSUES WITH IS_CHECKMATE FUNCTION
