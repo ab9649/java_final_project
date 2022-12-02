@@ -1,3 +1,5 @@
+pawn promotion
+castling
 
 Layered panel for "white/black wins!"
     -replay option 
