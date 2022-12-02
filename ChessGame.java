@@ -158,12 +158,8 @@ public class ChessGame extends JFrame{
     public void undo(Piece fromPiece, Piece toPiece, Square fromSquare, Square toSquare){
         fromSquare.setPiece(fromPiece);
         toSquare.setPiece(toPiece);
-        fromPiece.setX(fromSquare.getlocX());
-        fromPiece.setY(fromSquare.getlocY());
         if (toPiece != null){
             toPiece.setCapture(false);
-            toPiece.setX(toSquare.getlocX());
-            toPiece.setY(toSquare.getlocY());
         }
     }
     
