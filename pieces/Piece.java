@@ -10,6 +10,7 @@ public abstract class Piece{
     private boolean captured = false;
     private String color;
     private Image img;
+    private int timesMoved = 1;
     
 
     public Piece(int x, int y, String color, Image img){
@@ -31,22 +32,19 @@ public abstract class Piece{
 
 
 
-    public boolean Move(Set<String> moveList,Square toSquare, Square fromSquare){
+    public boolean Move(Square[][] gameArray, Set<String> moveList,Square toSquare, Square fromSquare){
         if (moveList != null && moveList.contains(toSquare.getlocX()+"," +toSquare.getlocY())){
-            if (toSquare.getPiece() == null){
-                this.x = (toSquare.getlocX());
-                this.y = (toSquare.getlocY());
-                
-            }
-            else{
+            if (toSquare.getPiece() != null){
                 this.Take(toSquare.getPiece());
             }
             toSquare.setPiece(this);
             fromSquare.setPiece(null);
+            timesMoved ++;
             return true;
         }
         return false;
     }
+    public void undoTimesMoved(){this.timesMoved-=1;}
 
 
     
@@ -58,8 +56,8 @@ public abstract class Piece{
     }
     public void capture(){
         this.captured = true;
-        this.x = 0;
-        this.y = 0;
+        this.x = -1;
+        this.y = -1;
     }
     public void setCapture(boolean status){this.captured = status;}
     public void setX(int x){this.x = x;}
@@ -69,4 +67,5 @@ public abstract class Piece{
     public String getColor(){return this.color;}
     public boolean isCaptured(){return this.captured;}
     public Image getImage(){return this.img;}
+    public int getTimesMoved(){return this.timesMoved;}
 }

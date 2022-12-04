@@ -32,7 +32,6 @@ public class ChessGame extends JFrame{
             if (i == 8){j = 0; k =6;}
             whitePieces.add(gameArray[j][k].getPiece());
         }
-        System.out.println(blackPieces);
 
         MouseListener moveListener = new MouseListener(){
 
@@ -57,7 +56,7 @@ public class ChessGame extends JFrame{
                     if (chosenSquare.getPiece() != null && chosenSquare.getPiece().getColor().equals(currTurn.getColor())){
                         fromSquare = chosenSquare;
                         //validate moves
-                        System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece());
+                        System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece() + " "+fromSquare.getPiece().getX() +" "+fromSquare.getPiece().getY());
                         possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
                         validPress = true;
                         return;
@@ -75,7 +74,7 @@ public class ChessGame extends JFrame{
                         toSquare = (Square) comp.getComponentAt(e.getPoint());
                         Piece fromPiece = fromSquare.getPiece();
                         Piece toPiece = toSquare.getPiece();
-                        if (fromSquare.getPiece().Move(possibleMoveLocations, toSquare, fromSquare)){
+                        if (fromSquare.getPiece().Move(gameArray, possibleMoveLocations, toSquare, fromSquare)){
                             //move would place own king in check
                             if (currTurn.isChecked(gameArray)){
                                 undo(fromPiece, toPiece, fromSquare, toSquare);
@@ -86,11 +85,6 @@ public class ChessGame extends JFrame{
                                     if (isCheckmate(swapCurTurn())){
                                         gameOver(board, this);
                                     }
-                                    //TODO
-                                    //swapCurTurn().setChecked(true);
-                                    //if (swapCurTurn().possibleMoves(gameArray).isEmpty()){
-                                        //gameOver(board, this);
-                                    //}
                                 }
                                 currTurn = swapCurTurn();
                             }
@@ -122,6 +116,8 @@ public class ChessGame extends JFrame{
             }
             
         };
+        
+        
         board.addMouseListener(moveListener);
         add(board, BorderLayout.CENTER);
     }
@@ -141,7 +137,7 @@ public class ChessGame extends JFrame{
                 Piece toPiece = gameArray[x][y].getPiece();
                 Square fromSquare = gameArray[piece.getX()][piece.getY()];
                 Square toSquare = gameArray[x][y];
-                if (piece.Move(moveList, toSquare, fromSquare)){
+                if (piece.Move(gameArray, moveList, toSquare, fromSquare)){
                     if (!currTurn.isChecked(gameArray)){
                         undo(piece, toPiece, fromSquare, toSquare);
                         return false;
@@ -158,12 +154,16 @@ public class ChessGame extends JFrame{
     public void undo(Piece fromPiece, Piece toPiece, Square fromSquare, Square toSquare){
         fromSquare.setPiece(fromPiece);
         toSquare.setPiece(toPiece);
-        fromPiece.setX(fromSquare.getlocX());
-        fromPiece.setY(fromSquare.getlocY());
+        fromPiece.undoTimesMoved();
         if (toPiece != null){
             toPiece.setCapture(false);
-            toPiece.setX(toSquare.getlocX());
-            toPiece.setY(toSquare.getlocY());
+            toPiece.undoTimesMoved();
+        }
+        //preserve castle ability after test move
+        if (fromPiece instanceof King){
+            if (fromPiece.getTimesMoved() == 1){
+                ((King)fromPiece).setCanCastle(true);
+            }
         }
     }
     

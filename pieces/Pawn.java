@@ -18,8 +18,8 @@ public class Pawn extends Piece{
 
      
     @Override
-    public boolean Move(Set<String> moveList, Square toSquare, Square fromSquare) {
-       if (super.Move(moveList, toSquare, fromSquare)){
+    public boolean Move(Square[][] gameArray, Set<String> moveList, Square toSquare, Square fromSquare) {
+       if (super.Move(gameArray, moveList, toSquare, fromSquare)){
             if (super.getY() == 0){
                 this.Promote();
             }
