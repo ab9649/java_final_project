@@ -140,6 +140,8 @@ public class King extends Piece{
             }
         }
         //along diagonal
+        x = super.getX();
+        y = super.getY();
         int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}};
         for (int[] pair : pawnCheckSquares){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
