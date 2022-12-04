@@ -35,9 +35,6 @@ public class Square extends JPanel {
 	    }
         repaint();
     }
-    public void setPieceNoRepaint(Piece piece){
-        currPiece = piece;
-    }
     public Piece getPiece(){return this.currPiece;}
     public int getlocX(){return this.locX;}
     public int getlocY(){return this.locY;}
@@ -91,6 +88,8 @@ public class Square extends JPanel {
             }
         }
         //along diagonal
+        x = locX;
+        y = locY;
         int[][] pawnCheckSquares = {{x-1,y-1},{x-1,y+1},{x+1,y+1}, {x+1,y-1}};
         for (int[] pair : pawnCheckSquares){
             if (pair[0] >= 0 && pair[0] <=7 && pair[1] > 0 && pair[1] <=7){
