@@ -12,22 +12,6 @@ public class Pawn extends Piece{
     public Pawn(int x, int y, String color){
         super(x,y,color,new ImageIcon("images/pawn_"+color+".png").getImage());
     }
-    public void Promote(){
-        //TODO
-    }
-
-     
-    @Override
-    public boolean Move(Square[][] gameArray, Set<String> moveList, Square toSquare, Square fromSquare) {
-       if (super.Move(gameArray, moveList, toSquare, fromSquare)){
-            if (super.getY() == 0){
-                this.Promote();
-            }
-            return true;
-        }
-        return false;
-    }
-
 
     @Override
     public Set<String>possibleMoves(Square[][] gameArray) {

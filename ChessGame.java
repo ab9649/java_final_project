@@ -88,7 +88,7 @@ public class ChessGame extends JFrame{
                                 currTurn = swapCurTurn();
                             }
                             //pawn promotion
-                            if (fromPiece instanceof Pawn && fromPiece.getY() == 7 || fromPiece.getY() == 0){
+                            if (fromPiece instanceof Pawn && (fromPiece.getY() == 7 || fromPiece.getY() == 0)){
                                 pawnPromotion(fromPiece, toSquare);
                             }
                         }
@@ -133,20 +133,22 @@ public class ChessGame extends JFrame{
             pieceList = blackPieces;
         }
         for (Piece piece:pieceList){
-            Set<String> moveList = piece.possibleMoves(gameArray);
-            for (String move : moveList){
-                int x = Character.getNumericValue(move.charAt(0));
-                int y = Character.getNumericValue(move.charAt(2));
-                Piece toPiece = gameArray[x][y].getPiece();
-                Square fromSquare = gameArray[piece.getX()][piece.getY()];
-                Square toSquare = gameArray[x][y];
-                if (piece.Move(gameArray, moveList, toSquare, fromSquare)){
-                    if (!currTurn.isChecked(gameArray)){
+            if(!piece.isCaptured()){
+                Set<String> moveList = piece.possibleMoves(gameArray);
+                for (String move : moveList){
+                    int x = Character.getNumericValue(move.charAt(0));
+                    int y = Character.getNumericValue(move.charAt(2));
+                    Piece toPiece = gameArray[x][y].getPiece();
+                    Square fromSquare = gameArray[piece.getX()][piece.getY()];
+                    Square toSquare = gameArray[x][y];
+                    if (piece.Move(gameArray, moveList, toSquare, fromSquare)){
+                        if (!currTurn.isChecked(gameArray)){
+                            undo(piece, toPiece, fromSquare, toSquare);
+                            return false;
+                        }
+                        else{
                         undo(piece, toPiece, fromSquare, toSquare);
-                        return false;
-                    }
-                    else{
-                    undo(piece, toPiece, fromSquare, toSquare);
+                        }
                     }
                 }
             }
@@ -184,21 +186,31 @@ public class ChessGame extends JFrame{
     }
 
     public void pawnPromotion(Piece piece, Square square){
+        System.out.println(whitePieces);
         String[] options = {"Queen", "Rook","Knight", "Bishop"};
         String choice = (String) JOptionPane.showInputDialog(this, "Choose piece to promote to", "Promote", JOptionPane.QUESTION_MESSAGE, null, options, "Queen");
         Piece newPiece;
         switch(choice){
             case "Queen":
                 newPiece= new Queen(piece.getX(), piece.getY(), piece.getColor());
+                break;
             case "Knight":
                 newPiece= new Knight(piece.getX(), piece.getY(), piece.getColor());
+                break;
             case "Rook":
                 newPiece= new Rook(piece.getX(), piece.getY(), piece.getColor());
                 ((Rook)newPiece).setCanCastle(false);
+                break;
             default:
                 newPiece= new Bishop(piece.getX(), piece.getY(), piece.getColor());
+                break;
         }
-        //piece = newPiece;
+        if (piece.getColor() == "white"){
+            whitePieces.set(whitePieces.indexOf(piece),newPiece);
+        }
+        else{
+            blackPieces.set(whitePieces.indexOf(piece),newPiece);
+        }
         square.setPiece(newPiece);
     }
 
