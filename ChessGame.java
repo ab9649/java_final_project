@@ -77,10 +77,12 @@ public class ChessGame extends JFrame{
                             //move would place own king in check
                             if (currTurn.isChecked(gameArray)){
                                 undo(fromPiece, toPiece, fromSquare, toSquare);
+                                System.out.println("Invalid move: Would leave king in check");
                             }
                             else {
                                 //introduce new check
                                 if (swapCurTurn().isChecked(gameArray)){
+                                    System.out.println("Check");
                                     if (isCheckmate(swapCurTurn())){
                                         gameOver(board, this, currTurn.getColor());
                                     }
@@ -173,7 +175,6 @@ public class ChessGame extends JFrame{
     }
     
     public void gameOver(JPanel board, MouseListener moveListener, String winner){
-        System.out.println("CHECKMATE");
         board.removeMouseListener(moveListener);
         String[] options = {"New Game", "Cancel"};
         int choice = JOptionPane.showOptionDialog(this, "CHECKMATE. "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
@@ -186,7 +187,6 @@ public class ChessGame extends JFrame{
     }
 
     public void pawnPromotion(Piece piece, Square square){
-        System.out.println(whitePieces);
         String[] options = {"Queen", "Rook","Knight", "Bishop"};
         String choice = (String) JOptionPane.showInputDialog(this, "Choose piece to promote to", "Promote", JOptionPane.QUESTION_MESSAGE, null, options, "Queen");
         Piece newPiece;
