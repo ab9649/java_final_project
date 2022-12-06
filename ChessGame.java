@@ -56,7 +56,6 @@ public class ChessGame extends JFrame{
                     if (chosenSquare.getPiece() != null && chosenSquare.getPiece().getColor().equals(currTurn.getColor())){
                         fromSquare = chosenSquare;
                         //validate moves
-                        System.out.println(""+fromSquare.getlocX() +" "+ fromSquare.getlocY() +" "+fromSquare.getPiece() + " "+fromSquare.getPiece().getX() +" "+fromSquare.getPiece().getY());
                         possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
                         validPress = true;
                         return;
@@ -83,10 +82,14 @@ public class ChessGame extends JFrame{
                                 //introduce new check
                                 if (swapCurTurn().isChecked(gameArray)){
                                     if (isCheckmate(swapCurTurn())){
-                                        gameOver(board, this);
+                                        gameOver(board, this, currTurn.getColor());
                                     }
                                 }
                                 currTurn = swapCurTurn();
+                            }
+                            //pawn promotion
+                            if (fromPiece instanceof Pawn && (fromPiece.getY() == 7 || fromPiece.getY() == 0)){
+                                pawnPromotion(fromPiece, toSquare);
                             }
                         }
                     }
@@ -117,7 +120,7 @@ public class ChessGame extends JFrame{
             
         };
         
-        
+
         board.addMouseListener(moveListener);
         add(board, BorderLayout.CENTER);
     }
@@ -130,20 +133,22 @@ public class ChessGame extends JFrame{
             pieceList = blackPieces;
         }
         for (Piece piece:pieceList){
-            Set<String> moveList = piece.possibleMoves(gameArray);
-            for (String move : moveList){
-                int x = Character.getNumericValue(move.charAt(0));
-                int y = Character.getNumericValue(move.charAt(2));
-                Piece toPiece = gameArray[x][y].getPiece();
-                Square fromSquare = gameArray[piece.getX()][piece.getY()];
-                Square toSquare = gameArray[x][y];
-                if (piece.Move(gameArray, moveList, toSquare, fromSquare)){
-                    if (!currTurn.isChecked(gameArray)){
+            if(!piece.isCaptured()){
+                Set<String> moveList = piece.possibleMoves(gameArray);
+                for (String move : moveList){
+                    int x = Character.getNumericValue(move.charAt(0));
+                    int y = Character.getNumericValue(move.charAt(2));
+                    Piece toPiece = gameArray[x][y].getPiece();
+                    Square fromSquare = gameArray[piece.getX()][piece.getY()];
+                    Square toSquare = gameArray[x][y];
+                    if (piece.Move(gameArray, moveList, toSquare, fromSquare)){
+                        if (!currTurn.isChecked(gameArray)){
+                            undo(piece, toPiece, fromSquare, toSquare);
+                            return false;
+                        }
+                        else{
                         undo(piece, toPiece, fromSquare, toSquare);
-                        return false;
-                    }
-                    else{
-                    undo(piece, toPiece, fromSquare, toSquare);
+                        }
                     }
                 }
             }
@@ -167,12 +172,46 @@ public class ChessGame extends JFrame{
         }
     }
     
-    public void gameOver(JPanel board, MouseListener moveListener){
+    public void gameOver(JPanel board, MouseListener moveListener, String winner){
         System.out.println("CHECKMATE");
-        JLabel overSign = new JLabel("GAME OVER");
-        add(overSign,BorderLayout.CENTER);
         board.removeMouseListener(moveListener);
-        
+        String[] options = {"New Game", "Cancel"};
+        int choice = JOptionPane.showOptionDialog(this, "CHECKMATE. "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        if (choice == 0){
+            this.dispose();
+            JFrame frame = new ChessGame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+        }
+    }
+
+    public void pawnPromotion(Piece piece, Square square){
+        System.out.println(whitePieces);
+        String[] options = {"Queen", "Rook","Knight", "Bishop"};
+        String choice = (String) JOptionPane.showInputDialog(this, "Choose piece to promote to", "Promote", JOptionPane.QUESTION_MESSAGE, null, options, "Queen");
+        Piece newPiece;
+        switch(choice){
+            case "Queen":
+                newPiece= new Queen(piece.getX(), piece.getY(), piece.getColor());
+                break;
+            case "Knight":
+                newPiece= new Knight(piece.getX(), piece.getY(), piece.getColor());
+                break;
+            case "Rook":
+                newPiece= new Rook(piece.getX(), piece.getY(), piece.getColor());
+                ((Rook)newPiece).setCanCastle(false);
+                break;
+            default:
+                newPiece= new Bishop(piece.getX(), piece.getY(), piece.getColor());
+                break;
+        }
+        if (piece.getColor() == "white"){
+            whitePieces.set(whitePieces.indexOf(piece),newPiece);
+        }
+        else{
+            blackPieces.set(whitePieces.indexOf(piece),newPiece);
+        }
+        square.setPiece(newPiece);
     }
 
     public static void main(String[] args){
