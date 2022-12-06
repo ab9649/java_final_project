@@ -46,6 +46,11 @@ public class Square extends JPanel {
         //setPreferredSize(size);
         //setLayout(null);
 	//}
+    public void highlightSquare(){
+	    //may need to add boolean to set back to grey
+	    setBackgroundColor(Color.GREEN);
+	    repaint();
+    }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (this.currPiece != null){
