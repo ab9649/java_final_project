@@ -57,6 +57,14 @@ public class ChessGame extends JFrame{
                         fromSquare = chosenSquare;
                         //validate moves
                         possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
+                        //highlight squares
+                        for (String pair:possibleMoveLocations){
+                            if (!pair.equals("KC" || "QC"){
+                                int x = Character.getNumericValue(pair.charAt(0));
+                                int y = Character.getNumericValue(pair.charAt(2));
+                                gameArray[x][y].highlight();
+                            }
+                        }
                         validPress = true;
                         return;
                        }
