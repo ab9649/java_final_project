@@ -85,6 +85,7 @@ public class King extends Piece{
                 if (rook.getCanCastle()){
                     if (attemptCastle(gameArray, (Rook)gameArray[0][y].getPiece())){
                         retList.add("QC");
+                        retList.add("0," + y);
                     }
                 }
             }
@@ -94,6 +95,7 @@ public class King extends Piece{
                 if (rook.getCanCastle()){
                     if (attemptCastle(gameArray, (Rook)gameArray[7][y].getPiece())){
                         retList.add("KC");
+                        retList.add("7," + y);
                     }
                 }
             }
