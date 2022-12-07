@@ -1,10 +1,9 @@
 package square;
 import pieces.*;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 import pieces.Piece;
 
@@ -46,9 +45,18 @@ public class Square extends JPanel {
         //setPreferredSize(size);
         //setLayout(null);
 	//}
-    public void highlightSquare(){
-	    //may need to add boolean to set back to grey
-	    setBackgroundColor(Color.GREEN);
+    public void highlightSquare(boolean highlight){
+	    if (highlight){
+	        setBackground(Color.YELLOW);
+        }
+        else {
+            if ((locX % 2 != 0 && locY % 2 == 0) || (locX % 2 == 0 && locY % 2 != 0)){
+                setBackground(Color.GRAY);
+            }
+            else{
+                setBackground(Color.LIGHT_GRAY);
+            }
+        }
 	    repaint();
     }
     public void paintComponent(Graphics g) {

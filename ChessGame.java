@@ -59,10 +59,10 @@ public class ChessGame extends JFrame{
                         possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
                         //highlight squares
                         for (String pair:possibleMoveLocations){
-                            if (!pair.equals("KC" || "QC"){
+                            if (!(pair.equals("KC") || pair.equals("QC"))){
                                 int x = Character.getNumericValue(pair.charAt(0));
                                 int y = Character.getNumericValue(pair.charAt(2));
-                                gameArray[x][y].highlight();
+                                gameArray[x][y].highlightSquare(true);
                             }
                         }
                         validPress = true;
@@ -76,6 +76,13 @@ public class ChessGame extends JFrame{
             public void mouseReleased(MouseEvent e) {
                 // TODO Auto-generated method stub
                 if (validPress){
+                    for (String pair:possibleMoveLocations){
+                        if (!(pair.equals("KC") || pair.equals("QC"))){
+                            int x = Character.getNumericValue(pair.charAt(0));
+                            int y = Character.getNumericValue(pair.charAt(2));
+                            gameArray[x][y].highlightSquare(false);
+                        }
+                    }
                     JComponent comp = (JComponent) e.getSource();
                     if (comp.getComponentAt(e.getPoint()) instanceof Square){
                         toSquare = (Square) comp.getComponentAt(e.getPoint());
