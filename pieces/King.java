@@ -62,12 +62,10 @@ public class King extends Piece{
         if (rook.getX() == 0){
             for (int i = 1; i < 4; i++){
                 if (gameArray[i][super.getY()].getPiece() != null || (i != 1 && gameArray[i][super.getY()].isCheckSpot(super.getColor(), gameArray))){
-                    System.out.println("Check preventing castling");
                     return false;}}}
         else{
             for (int i = 5; i < 7; i++){
                 if (gameArray[i][super.getY()].getPiece() != null || gameArray[i][super.getY()].isCheckSpot(super.getColor(), gameArray)){
-                    System.out.println("Check preventing castling");
                     return false;}}}
         return true;
     }
