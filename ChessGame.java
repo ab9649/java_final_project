@@ -87,11 +87,11 @@ public class ChessGame extends JFrame{
                                         gameOver(board, this, currTurn.getColor());
                                     }
                                 }
+                                //pawn promotion
+                                if (fromPiece instanceof Pawn && (fromPiece.getY() == 7 || fromPiece.getY() == 0)){
+                                    pawnPromotion(fromPiece, toSquare);
+                                }
                                 currTurn = swapCurTurn();
-                            }
-                            //pawn promotion
-                            if (fromPiece instanceof Pawn && (fromPiece.getY() == 7 || fromPiece.getY() == 0)){
-                                pawnPromotion(fromPiece, toSquare);
                             }
                         }
                     }
