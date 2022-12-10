@@ -32,6 +32,12 @@ public class StartGame extends JFrame{
             }
         });
         networkButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        networkButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                NetworkGame.main(null);
+                frame.dispose();
+            }
+        });
         
         panel.add(Box.createGlue());
         panel.add(localButton);
