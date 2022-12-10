@@ -15,10 +15,12 @@ public class ChessGame extends JFrame{
     private King blackKing;
     private final ArrayList<Piece> blackPieces = new ArrayList<Piece>();
     private final ArrayList<Piece> whitePieces = new ArrayList<Piece>();
+    private JPanel board;
+    private JFrame frame = this;
 
     public ChessGame(){
         setSize(700, 700);
-        JPanel board =  new ChessBoard();
+        board =  new ChessBoard();
         gameArray = ((ChessBoard)board).getChessBoardArray();
         whiteKing= (King) gameArray[4][7].getPiece();
         blackKing = (King) gameArray[4][0].getPiece();
@@ -124,6 +126,7 @@ public class ChessGame extends JFrame{
         
 
         board.addMouseListener(moveListener);
+        createMenu();
         add(board, BorderLayout.CENTER);
     }
     public boolean isCheckmate(King currTurn){
@@ -213,6 +216,23 @@ public class ChessGame extends JFrame{
         }
         square.setPiece(newPiece);
     }
+    private void createMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Options");
+		JMenuItem exitItem = new JMenuItem("Exit");
+		exitItem.addActionListener((e) -> System.exit(0));
+		JMenuItem connectItem = new JMenuItem("Return To Menu");
+		connectItem.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                StartGame.main(null);
+                frame.dispose();
+            }
+        });
+		menu.add(connectItem);
+		menu.add(exitItem);
+		menuBar.add(menu);
+		this.setJMenuBar(menuBar);
+	}
 
     public static void main(String[] args){
         JFrame frame = new ChessGame();
