@@ -21,8 +21,8 @@ public class NetworkGame extends JFrame implements Runnable{
     private JFrame frame = this;
 
     //networking
-    ObjectOutputStream toServer = null;
-    ObjectInputStream fromServer = null;
+    DataOutputStream toServer = null;
+    DataInputStream fromServer = null;
     Socket socket = null;
     NetworkGame client = this;
     King clientColor = null;
@@ -39,12 +39,12 @@ public class NetworkGame extends JFrame implements Runnable{
     @Override
     public void run() {
         try {
-            fromServer = new ObjectInputStream(socket.getInputStream());
+            fromServer = new DataInputStream(socket.getInputStream());
     
             while (true) {
-              int[][] move = (int[][]) fromServer.readObject();
-              Square fromSquare = gameArray[move[0][0]][move[0][1]];
-              Square toSquare = gameArray[move[1][0]][move[1][1]];
+              String move = fromServer.readUTF();
+              Square fromSquare = gameArray[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))];
+              Square toSquare = gameArray[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))];
               possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
               performMove(fromSquare, toSquare);
             }
@@ -52,10 +52,6 @@ public class NetworkGame extends JFrame implements Runnable{
           catch(IOException ex) {
             ex.printStackTrace();
           } 
-          catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         
     }
     public NetworkGame(){
@@ -103,13 +99,13 @@ public class NetworkGame extends JFrame implements Runnable{
                         toSquare = (Square) comp.getComponentAt(e.getPoint());
                         performMove(fromSquare, toSquare);
                         try {
-                            toServer = new ObjectOutputStream(socket.getOutputStream());
+                            toServer = new DataOutputStream(socket.getOutputStream());
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
                         try {
-                            int[][] outSquares = {{fromSquare.getlocX(), fromSquare.getlocY()}, {toSquare.getlocX(), toSquare.getlocY()}};
-                            toServer.writeObject(outSquares);
+                            String outSquares = ""+fromSquare.getlocX()+fromSquare.getlocY()+toSquare.getlocX()+toSquare.getlocY();
+                            toServer.writeUTF(outSquares);
                             toServer.flush();
                           }
                           catch (IOException ex) {
@@ -132,8 +128,8 @@ public class NetworkGame extends JFrame implements Runnable{
         //network
         try {
             socket = new Socket("localhost", 9898);
-            ObjectInputStream getColor = new ObjectInputStream(socket.getInputStream());
-            if (getColor.readObject().equals("white")){
+            DataInputStream getColor = new DataInputStream(socket.getInputStream());
+            if (getColor.readUTF().equals("white")){
                 clientColor = whiteKing;
             }
             else{
@@ -143,10 +139,7 @@ public class NetworkGame extends JFrame implements Runnable{
             thread.start();
         } catch (IOException e1) {
             e1.printStackTrace();
-        } catch (ClassNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
+        } 
     }
     
 
@@ -235,13 +228,24 @@ public class NetworkGame extends JFrame implements Runnable{
     
     public void gameOver(JPanel board, MouseListener moveListener, String winner){
         board.removeMouseListener(moveListener);
-        String[] options = {"New Game", "Cancel"};
+        String[] options = {"Rematch", "Exit"};
         int choice = JOptionPane.showOptionDialog(this, "CHECKMATE. "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
         if (choice == 0){
-            this.dispose();
-            JFrame frame = new ChessGame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
+            resetBoard();
+            try {
+                toServer.writeUTF("reset");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            try {
+                toServer.writeUTF("Cancel");
+                client.dispose();
+                StartGame.main(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -289,6 +293,26 @@ public class NetworkGame extends JFrame implements Runnable{
 		menuBar.add(menu);
 		this.setJMenuBar(menuBar);
 	}
+
+    public void resetBoard(){
+        for (int i = 0; i < 8; i++){
+            gameArray[i][0].setPiece(blackPieces.get(i));
+        }
+        for (int i = 0; i <8; i++){
+            gameArray[i][1].setPiece(blackPieces.get(i+8));
+        }
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                gameArray[i][j].setPiece(null);
+            }
+        }
+        for (int i = 0; i <8; i++){
+            gameArray[i][1].setPiece(whitePieces.get(i+8));
+        }
+        for (int i = 0; i < 8; i++){
+            gameArray[i][0].setPiece(whitePieces.get(i));
+        }
+    }
 
     public static void main(String[] args){
         JFrame frame = new NetworkGame();

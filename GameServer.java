@@ -81,8 +81,8 @@ public class GameServer extends JFrame implements Runnable {
             else{
                 color = "black";
             }
-            ObjectOutputStream assignColor = new ObjectOutputStream(socket.getOutputStream());
-            assignColor.writeObject(color);
+            DataOutputStream assignColor = new DataOutputStream(socket.getOutputStream());
+            assignColor.writeUTF(color);
 			assignColor = null;
 			
         	} catch (IOException e) {
@@ -93,24 +93,21 @@ public class GameServer extends JFrame implements Runnable {
 		public void run() {
 		  try {
 
-			ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
-			ObjectOutputStream outputToClient;
+			DataInputStream inputFromClient = new DataInputStream(socket.getInputStream());
+			DataOutputStream outputToClient;
 	
 			while (true) {
-				//if (opponents.get(socket)!= null){
-                	int [][]moves =  (int[][]) inputFromClient.readObject();
+				if (opponents.get(socket)!= null){
+                	String moves =  inputFromClient.readUTF();
 					Socket opponent = opponents.get(socket);
-					outputToClient = new ObjectOutputStream(opponent.getOutputStream());
-					outputToClient.writeObject(moves);
-				//}
+					outputToClient = new DataOutputStream(opponent.getOutputStream());
+					outputToClient.writeUTF(moves);
+				}
 			}
 		  }
 		  catch(IOException ex) {
 			ex.printStackTrace();
-		  } catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		  } 
 		}
 	  }
 	
