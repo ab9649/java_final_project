@@ -42,10 +42,11 @@ public class NetworkGame extends JFrame implements Runnable{
             fromServer = new ObjectInputStream(socket.getInputStream());
     
             while (true) {
-              Square[] move = (Square[]) fromServer.readObject();
-              Square fromSquare = move[0];
-              Square toSquare = move[1];
-              performMove(gameArray[fromSquare.getlocX()][fromSquare.getlocY()], gameArray[toSquare.getlocX()][toSquare.getlocY()]);
+              int[][] move = (int[][]) fromServer.readObject();
+              Square fromSquare = gameArray[move[0][0]][move[0][1]];
+              Square toSquare = gameArray[move[1][0]][move[1][1]];
+              possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
+              performMove(fromSquare, toSquare);
             }
           }
           catch(IOException ex) {
@@ -107,7 +108,7 @@ public class NetworkGame extends JFrame implements Runnable{
                             e1.printStackTrace();
                         }
                         try {
-                            Square[] outSquares = {fromSquare, toSquare};
+                            int[][] outSquares = {{fromSquare.getlocX(), fromSquare.getlocY()}, {toSquare.getlocX(), toSquare.getlocY()}};
                             toServer.writeObject(outSquares);
                             toServer.flush();
                           }
@@ -131,8 +132,8 @@ public class NetworkGame extends JFrame implements Runnable{
         //network
         try {
             socket = new Socket("localhost", 9898);
-            DataInputStream getColor = new DataInputStream(socket.getInputStream());
-            if (getColor.readUTF().equals("white")){
+            ObjectInputStream getColor = new ObjectInputStream(socket.getInputStream());
+            if (getColor.readObject().equals("white")){
                 clientColor = whiteKing;
             }
             else{
@@ -141,6 +142,9 @@ public class NetworkGame extends JFrame implements Runnable{
             Thread thread = new Thread(this);
             thread.start();
         } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (ClassNotFoundException e1) {
+            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
     }

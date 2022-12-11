@@ -1,9 +1,8 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import javax.swing.*;
-import square.*;
+
 
 public class GameServer extends JFrame implements Runnable {
 
@@ -11,7 +10,8 @@ public class GameServer extends JFrame implements Runnable {
 	private static int HEIGHT = 300;
 	private JTextArea ta;
 	private int colorNum = 0;
-	ArrayList<Socket> clientList = new ArrayList<>();
+	private HashMap<Socket, Socket> opponents = new HashMap<Socket, Socket>();
+	private Queue<Socket> clientQueue = new LinkedList<>();
 	
 	public GameServer() {
 		super("Chat Server");
@@ -51,7 +51,14 @@ public class GameServer extends JFrame implements Runnable {
                 	colorNum ++;
                     ta.append("Starting thread for client " + colorNum + " at " + new Date() + '\n');
 
-                	clientList.add(socket);
+                	if (clientQueue.isEmpty()){
+						clientQueue.add(socket);
+					}
+					else{
+						Socket partner = clientQueue.remove();
+						opponents.put(socket, partner);
+						opponents.put(partner, socket);
+					}
                 
                 	new Thread(new HandleAClient(socket, colorNum)).start();
                 }		
@@ -74,8 +81,10 @@ public class GameServer extends JFrame implements Runnable {
             else{
                 color = "black";
             }
-            DataOutputStream assignColor = new DataOutputStream(socket.getOutputStream());
-            assignColor.writeUTF(color);
+            ObjectOutputStream assignColor = new ObjectOutputStream(socket.getOutputStream());
+            assignColor.writeObject(color);
+			assignColor = null;
+			
         	} catch (IOException e) {
             	e.printStackTrace();
         	}
@@ -83,30 +92,25 @@ public class GameServer extends JFrame implements Runnable {
 	
 		public void run() {
 		  try {
+
 			ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
 			ObjectOutputStream outputToClient;
 	
 			while (true) {
-                Square[] moves;
-                try {
-                    moves = (Square[]) inputFromClient.readObject();
-                    //ta.append(moves.toString());
-                    //change to map to map opponent
-				    for(Socket client:clientList){
-					    if (client != socket){
-						    outputToClient = new ObjectOutputStream(client.getOutputStream());
-						    outputToClient.writeObject(moves);
-					    }
-				    }
-                } catch (ClassNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+				//if (opponents.get(socket)!= null){
+                	int [][]moves =  (int[][]) inputFromClient.readObject();
+					Socket opponent = opponents.get(socket);
+					outputToClient = new ObjectOutputStream(opponent.getOutputStream());
+					outputToClient.writeObject(moves);
+				//}
 			}
 		  }
 		  catch(IOException ex) {
 			ex.printStackTrace();
-		  }
+		  } catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		}
 	  }
 	
