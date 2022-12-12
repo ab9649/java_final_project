@@ -1,10 +1,8 @@
 add options bar
     -resign
 -network options
-    -when player connects give option to choose color
-    -color stored in client and they can only choose that color
-    -have option to play local or network
-    -send string of pairs of x and y as fromsquare and to square and when recieving run everything in mouse released (line 74-)
+    -if client color == white: have "waiting" JPanel until opponent recieved from server
+    -if opponent disconnects (error caught): show message and end game 
     
 misc
     -hightlight possible moves
