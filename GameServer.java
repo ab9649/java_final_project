@@ -110,6 +110,14 @@ public class GameServer extends JFrame implements Runnable {
 			}
 		  }
 		  catch(IOException ex) {
+			DataOutputStream clientOutput;
+			try {
+				clientOutput = new DataOutputStream(opponents.get(socket).getOutputStream());
+				clientOutput.writeUTF("disconnected");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			ex.printStackTrace();
 		  } 
 		}

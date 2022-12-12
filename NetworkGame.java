@@ -51,6 +51,14 @@ public class NetworkGame extends JFrame implements Runnable{
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 setVisible(true);
               }
+              else if (move.equals("disconnected")){
+                JOptionPane.showConfirmDialog(this, "Opponent disconnected.\nReturn to main menu", "Return to menu",JOptionPane.DEFAULT_OPTION);
+                client.dispose();
+                StartGame.main(null);
+              }
+              else if (move.equals("resign")){
+                gameOver(board, moveListener, clientColor.getColor(), clientColor.swapColor().toUpperCase() + " Resigned!");
+              }
               else if (move.equals("reset")){
                 if (playerRematch == true){
                     currTurn = startTurn;
@@ -205,7 +213,7 @@ public class NetworkGame extends JFrame implements Runnable{
                 if (swapCurTurn().isChecked(gameArray)){
                     System.out.println("Check");
                     if (isCheckmate(swapCurTurn())){
-                        gameOver(board, moveListener, currTurn.getColor());
+                        gameOver(board, moveListener, currTurn.getColor(), "CheckMate!");
                     }
                 }
                 //pawn promotion
@@ -281,9 +289,9 @@ public class NetworkGame extends JFrame implements Runnable{
         }
     }
     
-    public void gameOver(JPanel board, MouseListener moveListener, String winner){
+    public void gameOver(JPanel board, MouseListener moveListener, String winner, String winCondition){
         String[] options = {"Rematch", "Exit"};
-        int choice = JOptionPane.showOptionDialog(this, "CHECKMATE. "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
+        int choice = JOptionPane.showOptionDialog(this, winCondition+" "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
         if (choice == 0){
             resetBoard();
             try {
@@ -352,11 +360,16 @@ public class NetworkGame extends JFrame implements Runnable{
 		JMenu menu = new JMenu("Options");
 		JMenuItem exitItem = new JMenuItem("Exit");
 		exitItem.addActionListener((e) -> System.exit(0));
-		JMenuItem connectItem = new JMenuItem("Return To Menu");
+		JMenuItem connectItem = new JMenuItem("Resign");
 		connectItem.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                StartGame.main(null);
-                frame.dispose();
+                try {
+                    toServer = new DataOutputStream(socket.getOutputStream());
+                    toServer.writeUTF("resign");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                gameOver(board, moveListener, clientColor.swapColor(),clientColor.getColor().toUpperCase()+ " Resigned!");
             }
         });
 		menu.add(connectItem);
@@ -383,6 +396,10 @@ public class NetworkGame extends JFrame implements Runnable{
         for (int i = 0; i < 8; i++){
             gameArray[i][7].setPiece(whitePieces.get(i));
         }
+        fromSquare = null;
+        toSquare = null;
+        possibleMoveLocations = null;
+        currTurn = startTurn;
     }
 
     public static void main(String[] args){
