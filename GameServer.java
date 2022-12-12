@@ -14,7 +14,7 @@ public class GameServer extends JFrame implements Runnable {
 	private Queue<Socket> clientQueue = new LinkedList<>();
 	
 	public GameServer() {
-		super("Chat Server");
+		super("Game Server");
 		ta = new JTextArea();
 		ta.append("Game server started at "+ new Date() +"\n");
 		this.add(ta);

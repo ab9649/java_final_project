@@ -26,6 +26,8 @@ public class NetworkGame extends JFrame implements Runnable{
     Socket socket = null;
     NetworkGame client = this;
     King clientColor = null;
+    Boolean opponentRematch = false;
+    Boolean playerRematch =false;
     
 
     //moving
@@ -43,10 +45,30 @@ public class NetworkGame extends JFrame implements Runnable{
     
             while (true) {
               String move = fromServer.readUTF();
-              Square fromSquare = gameArray[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))];
-              Square toSquare = gameArray[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))];
-              possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
-              performMove(fromSquare, toSquare);
+              if (move.equals("reset")){
+                if (playerRematch == true){
+                    currTurn = startTurn;
+                }
+                else{opponentRematch = true;}
+              }
+              else if (move.equals("cancel")){
+                JOptionPane.showConfirmDialog(this, "Opponent denied Rematch.\nReturn to main menu", "Return to menu",JOptionPane.DEFAULT_OPTION);
+                client.dispose();
+                StartGame.main(null);
+              }
+              else if (move.charAt(0) == 'P'){
+                pawnPromotion(toSquare.getPiece(), toSquare, move.substring(1));
+                currTurn = swapCurTurn();
+                fromSquare = null;
+                toSquare = null;
+                possibleMoveLocations = null;
+              }
+              else{
+                fromSquare = gameArray[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))];
+                toSquare = gameArray[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))];
+                possibleMoveLocations = fromSquare.getPiece().possibleMoves(gameArray);
+                performMove(fromSquare, toSquare);
+              }
             }
           }
           catch(IOException ex) {
@@ -54,6 +76,8 @@ public class NetworkGame extends JFrame implements Runnable{
           } 
         
     }
+
+
     public NetworkGame(){
         setSize(700, 700);
         board =  new ChessBoard();
@@ -77,7 +101,6 @@ public class NetworkGame extends JFrame implements Runnable{
             public void mouseClicked(MouseEvent e) {}
             @Override
             public void mousePressed(MouseEvent e) {
-                // TODO Auto-generated method stub
                 JComponent comp = (JComponent) e.getSource();
                 if (comp.getComponentAt(e.getPoint()) instanceof Square){
                     Square chosenSquare = (Square) comp.getComponentAt(e.getPoint());
@@ -97,7 +120,6 @@ public class NetworkGame extends JFrame implements Runnable{
                     JComponent comp = (JComponent) e.getSource();
                     if (comp.getComponentAt(e.getPoint()) instanceof Square){
                         toSquare = (Square) comp.getComponentAt(e.getPoint());
-                        performMove(fromSquare, toSquare);
                         try {
                             toServer = new DataOutputStream(socket.getOutputStream());
                         } catch (IOException e1) {
@@ -107,10 +129,11 @@ public class NetworkGame extends JFrame implements Runnable{
                             String outSquares = ""+fromSquare.getlocX()+fromSquare.getlocY()+toSquare.getlocX()+toSquare.getlocY();
                             toServer.writeUTF(outSquares);
                             toServer.flush();
-                          }
-                          catch (IOException ex) {
+                          } catch (IOException ex) {
                             System.err.println(ex);
-                          }
+                        }
+                        performMove(fromSquare, toSquare);
+                        
                     }
                 }
             }
@@ -162,15 +185,20 @@ public class NetworkGame extends JFrame implements Runnable{
                 }
                 //pawn promotion
                 if (fromPiece instanceof Pawn && (fromPiece.getY() == 7 || fromPiece.getY() == 0)){
-                    pawnPromotion(fromPiece, toSquare);
+                    if (fromPiece.getColor().equals(clientColor.getColor())){
+                        pawnPromotion(fromPiece, toSquare, null);
+                    }
+                    else{
+                        return;
+                    }
                 }
                 currTurn = swapCurTurn();
             }
         }
-                fromSquare = null;
-                toSquare = null;
-                possibleMoveLocations = null;
-            }
+        fromSquare = null;
+        toSquare = null;
+        possibleMoveLocations = null;
+     }
 
     private King swapCurTurn() {
         if (currTurn == whiteKing){
@@ -178,6 +206,8 @@ public class NetworkGame extends JFrame implements Runnable{
         }
         return whiteKing;
     }
+
+
     public boolean isCheckmate(King currTurn){
         ArrayList<Piece> pieceList;
         if (currTurn.getColor() == "white"){
@@ -227,7 +257,6 @@ public class NetworkGame extends JFrame implements Runnable{
     }
     
     public void gameOver(JPanel board, MouseListener moveListener, String winner){
-        board.removeMouseListener(moveListener);
         String[] options = {"Rematch", "Exit"};
         int choice = JOptionPane.showOptionDialog(this, "CHECKMATE. "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
         if (choice == 0){
@@ -240,7 +269,7 @@ public class NetworkGame extends JFrame implements Runnable{
         }
         else{
             try {
-                toServer.writeUTF("Cancel");
+                toServer.writeUTF("cancel");
                 client.dispose();
                 StartGame.main(null);
             } catch (IOException e) {
@@ -249,9 +278,15 @@ public class NetworkGame extends JFrame implements Runnable{
         }
     }
 
-    public void pawnPromotion(Piece piece, Square square){
+    public void pawnPromotion(Piece piece, Square square, String input){
         String[] options = {"Queen", "Rook","Knight", "Bishop"};
-        String choice = (String) JOptionPane.showInputDialog(this, "Choose piece to promote to", "Promote", JOptionPane.QUESTION_MESSAGE, null, options, "Queen");
+        String choice;
+        if (input == null){
+            choice = (String) JOptionPane.showInputDialog(this, "Choose piece to promote to", "Promote", JOptionPane.QUESTION_MESSAGE, null, options, "Queen");
+        }
+        else{
+            choice = input;
+        }
         Piece newPiece;
         switch(choice){
             case "Queen":
@@ -264,17 +299,28 @@ public class NetworkGame extends JFrame implements Runnable{
                 newPiece= new Rook(piece.getX(), piece.getY(), piece.getColor());
                 ((Rook)newPiece).setCanCastle(false);
                 break;
+            case "Bishop":
+                newPiece= new Bishop(piece.getX(), piece.getY(), piece.getColor());
+                break;
             default:
                 newPiece= new Bishop(piece.getX(), piece.getY(), piece.getColor());
                 break;
+        }
+        if (input == null){
+            try {
+                toServer.writeUTF("P"+choice);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         if (piece.getColor() == "white"){
             whitePieces.set(whitePieces.indexOf(piece),newPiece);
         }
         else{
-            blackPieces.set(whitePieces.indexOf(piece),newPiece);
+            blackPieces.set(blackPieces.indexOf(piece),newPiece);
         }
         square.setPiece(newPiece);
+
     }
     private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
@@ -301,16 +347,16 @@ public class NetworkGame extends JFrame implements Runnable{
         for (int i = 0; i <8; i++){
             gameArray[i][1].setPiece(blackPieces.get(i+8));
         }
-        for (int i = 0; i < 8; i++){
+        for (int i = 2; i < 6; i++){
             for (int j = 0; j < 8; j++){
-                gameArray[i][j].setPiece(null);
+                gameArray[j][i].setPiece(null);
             }
         }
         for (int i = 0; i <8; i++){
-            gameArray[i][1].setPiece(whitePieces.get(i+8));
+            gameArray[i][6].setPiece(whitePieces.get(i+8));
         }
         for (int i = 0; i < 8; i++){
-            gameArray[i][0].setPiece(whitePieces.get(i));
+            gameArray[i][7].setPiece(whitePieces.get(i));
         }
     }
 
