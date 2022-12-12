@@ -1,5 +1,0 @@
-misc
-    -hightlight possible moves
-        -on mouse pressed use possible locations array to repaint squares at gameArray[x][y] with green background
-        -repaint to normal on mouse release before moving pieces
-    -indicate current turn

@@ -27,7 +27,7 @@ public class StartGame extends JFrame{
         localButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         localButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                ChessGame.main(null);
+                LocalGame.main(null);
                 frame.dispose();
             }
         });

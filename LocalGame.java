@@ -7,7 +7,7 @@ import square.*;
 import pieces.*;
 
 
-public class ChessGame extends JFrame{
+public class LocalGame extends JFrame{
 
     private Square[][] gameArray;
     private King startTurn;
@@ -18,7 +18,7 @@ public class ChessGame extends JFrame{
     private JPanel board;
     private JFrame frame = this;
 
-    public ChessGame(){
+    public LocalGame(){
         setSize(700, 700);
         board =  new ChessBoard();
         gameArray = ((ChessBoard)board).getChessBoardArray();
@@ -183,7 +183,7 @@ public class ChessGame extends JFrame{
         int choice = JOptionPane.showOptionDialog(this, "CHECKMATE. "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
         if (choice == 0){
             this.dispose();
-            JFrame frame = new ChessGame();
+            JFrame frame = new LocalGame();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
         }
@@ -235,7 +235,7 @@ public class ChessGame extends JFrame{
 	}
 
     public static void main(String[] args){
-        JFrame frame = new ChessGame();
+        JFrame frame = new LocalGame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
