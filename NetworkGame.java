@@ -19,6 +19,7 @@ public class NetworkGame extends JFrame implements Runnable{
     private final ArrayList<Piece> whitePieces = new ArrayList<Piece>();
     private JPanel board;
     private JFrame frame = this;
+    private JFrame temp = null;
 
     //networking
     DataOutputStream toServer = null;
@@ -46,7 +47,9 @@ public class NetworkGame extends JFrame implements Runnable{
             while (true) {
               String move = fromServer.readUTF();
               if (move.equals("connected")){
-                board.addMouseListener(moveListener);
+                temp.dispose();
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setVisible(true);
               }
               else if (move.equals("reset")){
                 if (playerRematch == true){
@@ -147,6 +150,7 @@ public class NetworkGame extends JFrame implements Runnable{
         };
         
         createMenu();
+        board.addMouseListener(moveListener);
         add(board, BorderLayout.CENTER);
 
         //network
@@ -155,11 +159,29 @@ public class NetworkGame extends JFrame implements Runnable{
             DataInputStream getColor = new DataInputStream(socket.getInputStream());
             if (getColor.readUTF().equals("white")){
                 clientColor = whiteKing;
-                JOptionPane.showMessageDialog(board, "Looking for opponent");
+                temp = new JFrame();
+                temp.setSize(500,500);
+                JPanel panel = new JPanel(){
+                    @Override
+                    protected void paintComponent(Graphics g){
+                        super.paintComponent(g);
+                        g.drawImage(new ImageIcon("images/GameImage.png").getImage(), 0, 0, this.getWidth(),this.getHeight(),null);
+                    }
+                };
+                JLabel waitingLabel = new JLabel("Waiting for opponent to connect");
+                waitingLabel.setFont(new Font("Arial", Font.PLAIN, 22));
+                waitingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                temp.setContentPane(panel);
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                panel.add(Box.createGlue());
+                panel.add(waitingLabel);
+                panel.add(Box.createGlue());
+                temp.setVisible(true);
             }
             else{
                 clientColor = blackKing;
-                board.addMouseListener(moveListener);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
             }
             Thread thread = new Thread(this);
             thread.start();
@@ -365,8 +387,6 @@ public class NetworkGame extends JFrame implements Runnable{
 
     public static void main(String[] args){
         JFrame frame = new NetworkGame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
 
     }
     
