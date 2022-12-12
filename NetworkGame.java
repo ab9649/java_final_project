@@ -46,30 +46,36 @@ public class NetworkGame extends JFrame implements Runnable{
     
             while (true) {
               String move = fromServer.readUTF();
+              //found opponent
               if (move.equals("connected")){
                 temp.dispose();
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 setVisible(true);
               }
+              //opponent disconnected
               else if (move.equals("disconnected")){
                 JOptionPane.showConfirmDialog(this, "Opponent disconnected.\nReturn to main menu", "Return to menu",JOptionPane.DEFAULT_OPTION);
                 client.dispose();
                 StartGame.main(null);
               }
+              //opponent resigned
               else if (move.equals("resign")){
                 gameOver(board, moveListener, clientColor.getColor(), clientColor.swapColor().toUpperCase() + " Resigned!");
               }
+              //opponent requests rematch
               else if (move.equals("reset")){
                 if (playerRematch == true){
                     currTurn = startTurn;
                 }
                 else{opponentRematch = true;}
               }
+              //opponent declined rematch
               else if (move.equals("cancel")){
                 JOptionPane.showConfirmDialog(this, "Opponent denied Rematch.\nReturn to main menu", "Return to menu",JOptionPane.DEFAULT_OPTION);
                 client.dispose();
                 StartGame.main(null);
               }
+              //opponent pawn promotion choice
               else if (move.charAt(0) == 'P'){
                 pawnPromotion(toSquare.getPiece(), toSquare, move.substring(1));
                 currTurn = swapCurTurn();
@@ -77,6 +83,7 @@ public class NetworkGame extends JFrame implements Runnable{
                 toSquare = null;
                 possibleMoveLocations = null;
               }
+              //normal opponent move
               else{
                 fromSquare = gameArray[Character.getNumericValue(move.charAt(0))][Character.getNumericValue(move.charAt(1))];
                 toSquare = gameArray[Character.getNumericValue(move.charAt(2))][Character.getNumericValue(move.charAt(3))];
@@ -134,6 +141,7 @@ public class NetworkGame extends JFrame implements Runnable{
                     JComponent comp = (JComponent) e.getSource();
                     if (comp.getComponentAt(e.getPoint()) instanceof Square){
                         toSquare = (Square) comp.getComponentAt(e.getPoint());
+                        //send move to opponent client
                         try {
                             toServer = new DataOutputStream(socket.getOutputStream());
                         } catch (IOException e1) {
@@ -146,6 +154,7 @@ public class NetworkGame extends JFrame implements Runnable{
                           } catch (IOException ex) {
                             System.err.println(ex);
                         }
+                        //perform move in this client
                         performMove(fromSquare, toSquare);
                         
                     }
@@ -165,6 +174,8 @@ public class NetworkGame extends JFrame implements Runnable{
         try {
             socket = new Socket("localhost", 9898);
             DataInputStream getColor = new DataInputStream(socket.getInputStream());
+            //client is first to join, they are white 
+            //need to wait for an opponent to connect
             if (getColor.readUTF().equals("white")){
                 clientColor = whiteKing;
                 temp = new JFrame();
@@ -186,6 +197,7 @@ public class NetworkGame extends JFrame implements Runnable{
                 panel.add(Box.createGlue());
                 temp.setVisible(true);
             }
+            //client connects to awaiting opponent, client is black, game can begin
             else{
                 clientColor = blackKing;
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -233,6 +245,7 @@ public class NetworkGame extends JFrame implements Runnable{
         possibleMoveLocations = null;
      }
 
+    //swaps turn after successful move
     private King swapCurTurn() {
         if (currTurn == whiteKing){
             return blackKing;
@@ -240,7 +253,7 @@ public class NetworkGame extends JFrame implements Runnable{
         return whiteKing;
     }
 
-
+    //check is king is checkmated
     public boolean isCheckmate(King currTurn){
         ArrayList<Piece> pieceList;
         if (currTurn.getColor() == "white"){
@@ -272,7 +285,8 @@ public class NetworkGame extends JFrame implements Runnable{
         }
         return true;
     }
-    
+
+    //undo previous move
     public void undo(Piece fromPiece, Piece toPiece, Square fromSquare, Square toSquare){
         fromSquare.setPiece(fromPiece);
         toSquare.setPiece(toPiece);
@@ -289,6 +303,7 @@ public class NetworkGame extends JFrame implements Runnable{
         }
     }
     
+    //displays game over screen
     public void gameOver(JPanel board, MouseListener moveListener, String winner, String winCondition){
         String[] options = {"Rematch", "Exit"};
         int choice = JOptionPane.showOptionDialog(this, winCondition+" "+winner.toUpperCase()+" wins!", "Game Over", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
@@ -311,6 +326,7 @@ public class NetworkGame extends JFrame implements Runnable{
         }
     }
 
+    //dsplays promotion choice screen
     public void pawnPromotion(Piece piece, Square square, String input){
         String[] options = {"Queen", "Rook","Knight", "Bishop"};
         String choice;
@@ -339,6 +355,7 @@ public class NetworkGame extends JFrame implements Runnable{
                 newPiece= new Bishop(piece.getX(), piece.getY(), piece.getColor());
                 break;
         }
+        //write choice to opponent client
         if (input == null){
             try {
                 toServer.writeUTF("P"+choice);
@@ -355,6 +372,7 @@ public class NetworkGame extends JFrame implements Runnable{
         square.setPiece(newPiece);
 
     }
+
     private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Options");
@@ -378,6 +396,7 @@ public class NetworkGame extends JFrame implements Runnable{
 		this.setJMenuBar(menuBar);
 	}
 
+    //reset board for new game
     public void resetBoard(){
         for (int i = 0; i < 8; i++){
             gameArray[i][0].setPiece(blackPieces.get(i));

@@ -1,9 +1,3 @@
-add options bar
-    -resign
--network options
-    -if client color == white: have "waiting" JPanel until opponent recieved from server
-    -if opponent disconnects (error caught): show message and end game 
-    
 misc
     -hightlight possible moves
         -on mouse pressed use possible locations array to repaint squares at gameArray[x][y] with green background
