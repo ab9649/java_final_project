@@ -68,11 +68,13 @@ public class GameServer extends JFrame implements Runnable {
 	}
 	class HandleAClient implements Runnable {
 		private Socket socket; 
+		private Socket opponent;
 		private int colorNum;
 		
 		public HandleAClient(Socket socket, int colorNum) {
 		  this.socket = socket;
 		  this.colorNum = colorNum;
+		  this.opponent = opponents.get(socket);
           try {
             String color;
             if (this.colorNum % 2 == 1){
@@ -80,6 +82,8 @@ public class GameServer extends JFrame implements Runnable {
             }
             else{
                 color = "black";
+				DataOutputStream opponentFound = new DataOutputStream(opponent.getOutputStream());
+				opponentFound.writeUTF("connected");
             }
             DataOutputStream assignColor = new DataOutputStream(socket.getOutputStream());
             assignColor.writeUTF(color);

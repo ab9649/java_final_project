@@ -45,7 +45,10 @@ public class NetworkGame extends JFrame implements Runnable{
     
             while (true) {
               String move = fromServer.readUTF();
-              if (move.equals("reset")){
+              if (move.equals("connected")){
+                board.addMouseListener(moveListener);
+              }
+              else if (move.equals("reset")){
                 if (playerRematch == true){
                     currTurn = startTurn;
                 }
@@ -143,8 +146,6 @@ public class NetworkGame extends JFrame implements Runnable{
             public void mouseExited(MouseEvent e) {}
         };
         
-
-        board.addMouseListener(moveListener);
         createMenu();
         add(board, BorderLayout.CENTER);
 
@@ -154,9 +155,11 @@ public class NetworkGame extends JFrame implements Runnable{
             DataInputStream getColor = new DataInputStream(socket.getInputStream());
             if (getColor.readUTF().equals("white")){
                 clientColor = whiteKing;
+                JOptionPane.showMessageDialog(board, "Looking for opponent");
             }
             else{
                 clientColor = blackKing;
+                board.addMouseListener(moveListener);
             }
             Thread thread = new Thread(this);
             thread.start();
