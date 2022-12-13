@@ -11,11 +11,8 @@ import pieces.Piece;
 public class Square extends JPanel {
     private int locX;
     private int locY;
-	private Piece currPiece;
-	
-	//public Square(String img) {
-		//this(new ImageIcon(img).getImage());
-	//}
+    private Piece currPiece;
+
 
     public Square(int x, int y){
         this.locX = x;
@@ -27,6 +24,7 @@ public class Square extends JPanel {
         this.locY = piece.getY();
         this.currPiece = piece;
     }
+	
     public void setPiece(Piece piece){
         currPiece = piece;
 	    if (piece != null){
@@ -39,13 +37,6 @@ public class Square extends JPanel {
     public int getlocX(){return this.locX;}
     public int getlocY(){return this.locY;}
 
-
-	//public Square(Image img) {
-		//this.img = img;
-        //Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
-        //setPreferredSize(size);
-        //setLayout(null);
-	//}
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (this.currPiece != null){
@@ -53,12 +44,9 @@ public class Square extends JPanel {
             g.drawImage(img, (this.getWidth() - img.getWidth(null)) / 2, (this.getHeight() - img.getHeight(null)) / 2, null);
         }
     }
-    //public void setImage(String newimg){
-        //img = new ImageIcon(newimg).getImage();
-        //repaint();
-    //}
-	public boolean isCheckSpot(String color, Square[][]gameArray){
-	    String currTurnColor = color;
+	
+    public boolean isCheckSpot(String color, Square[][]gameArray){
+	String currTurnColor = color;
         int x = locX;
         int y = locY;
         //along axes
