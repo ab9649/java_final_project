@@ -44,14 +44,9 @@ public class LocalGame extends JFrame{
             King currTurn = startTurn;
 
             @Override
-            public void mouseClicked(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-
+            public void mouseClicked(MouseEvent e) {}
             @Override
             public void mousePressed(MouseEvent e) {
-                // TODO Auto-generated method stub
                 JComponent comp = (JComponent) e.getSource();
                 if (comp.getComponentAt(e.getPoint()) instanceof Square){
                     Square chosenSquare = (Square) comp.getComponentAt(e.getPoint());
@@ -65,10 +60,9 @@ public class LocalGame extends JFrame{
                 }
                 validPress = false;
             }
-
+		
             @Override
             public void mouseReleased(MouseEvent e) {
-                // TODO Auto-generated method stub
                 if (validPress){
                     JComponent comp = (JComponent) e.getSource();
                     if (comp.getComponentAt(e.getPoint()) instanceof Square){
@@ -111,24 +105,18 @@ public class LocalGame extends JFrame{
             }
 
             @Override
-            public void mouseEntered(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-
+            public void mouseEntered(MouseEvent e) {}
             @Override
-            public void mouseExited(MouseEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-            
-        };
+            public void mouseExited(MouseEvent e) {}
+	};
         
 
         board.addMouseListener(moveListener);
         createMenu();
         add(board, BorderLayout.CENTER);
     }
+	
+	
     public boolean isCheckmate(King currTurn){
         ArrayList<Piece> pieceList;
         if (currTurn.getColor() == "white"){
@@ -161,6 +149,7 @@ public class LocalGame extends JFrame{
         return true;
     }
     
+	
     public void undo(Piece fromPiece, Piece toPiece, Square fromSquare, Square toSquare){
         fromSquare.setPiece(fromPiece);
         toSquare.setPiece(toPiece);
@@ -177,6 +166,7 @@ public class LocalGame extends JFrame{
         }
     }
     
+	
     public void gameOver(JPanel board, MouseListener moveListener, String winner){
         board.removeMouseListener(moveListener);
         String[] options = {"New Game", "Cancel"};
@@ -189,6 +179,7 @@ public class LocalGame extends JFrame{
         }
     }
 
+	
     public void pawnPromotion(Piece piece, Square square){
         String[] options = {"Queen", "Rook","Knight", "Bishop"};
         String choice = (String) JOptionPane.showInputDialog(this, "Choose piece to promote to", "Promote", JOptionPane.QUESTION_MESSAGE, null, options, "Queen");
@@ -216,6 +207,8 @@ public class LocalGame extends JFrame{
         }
         square.setPiece(newPiece);
     }
+	
+	
     private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Options");
@@ -234,10 +227,10 @@ public class LocalGame extends JFrame{
 		this.setJMenuBar(menuBar);
 	}
 
+	
     public static void main(String[] args){
         JFrame frame = new LocalGame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-
     }
 }
