@@ -21,6 +21,10 @@ public class King extends Piece{
     public boolean getChecked(){return this.checked;}
     public boolean getCanCastle(){return this.canCastle;}
     public void setCanCastle(boolean status){this.canCastle = status;}
+    public String swapColor(){
+        if (super.getColor().equals("white")){return "black";}
+        return "white";
+    }
 
 
     @Override
