@@ -225,7 +225,7 @@ public class NetworkGame extends JFrame implements Runnable{
                 if (swapCurTurn().isChecked(gameArray)){
                     System.out.println("Check");
                     if (isCheckmate(swapCurTurn())){
-                        gameOver(board, moveListener, currTurn.getColor(), "CheckMate!");
+                        gameOver(board, moveListener, currTurn.getColor(), "Checkmate!");
                         currTurn = blackKing;
                     }
                 }
