@@ -226,6 +226,7 @@ public class NetworkGame extends JFrame implements Runnable{
                     System.out.println("Check");
                     if (isCheckmate(swapCurTurn())){
                         gameOver(board, moveListener, currTurn.getColor(), "CheckMate!");
+                        currTurn = blackKing;
                     }
                 }
                 //pawn promotion
